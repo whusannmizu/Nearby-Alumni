@@ -1,4 +1,4 @@
-package com.whu.nearby_alumni;
+package com.sannmizu.nearby_alumni;
 
 import org.junit.Test;
 
