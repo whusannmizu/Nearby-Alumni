@@ -2,7 +2,7 @@ package com.sannmizu.nearby_alumni.NetUtils;
 
 import com.google.gson.annotations.SerializedName;
 
-import retrofit2.Call;
+import io.reactivex.Observable;
 import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.POST;
@@ -13,7 +13,7 @@ public class ChatResponse extends MyResponse<ChatResponse.ChatData> {
     public static interface ChatService {
         @FormUrlEncoded
         @POST("chat/user/{userId}")
-        Call<ChatResponse> chat(@Path("userId")String userId, @Field("value")String value, @Query("logToken")String logToken,@Query("connToken")String connToken);
+        Observable<ChatResponse> chat(@Path("userId")String userId, @Field("value")String value, @Query("logToken")String logToken, @Query("connToken")String connToken);
     }
 
     public static class ChatData{

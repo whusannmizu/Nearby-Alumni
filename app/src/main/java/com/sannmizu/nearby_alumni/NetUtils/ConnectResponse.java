@@ -3,8 +3,7 @@ package com.sannmizu.nearby_alumni.NetUtils;
 
 import com.google.gson.annotations.SerializedName;
 
-import okhttp3.ResponseBody;
-import retrofit2.Call;
+import io.reactivex.Observable;
 import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.POST;
@@ -15,7 +14,7 @@ public class ConnectResponse extends MyResponse<ConnectResponse.ConnectData>{
     public static interface ConnectService {
         @FormUrlEncoded
         @POST("app/connect")
-        Call<ConnectResponse> connect(@Query("logToken")String logToken, @Field("value")String value);
+        Observable<ConnectResponse> connect(@Query("logToken")String logToken, @Field("value")String value);
     }
 
     public static class ConnectData {

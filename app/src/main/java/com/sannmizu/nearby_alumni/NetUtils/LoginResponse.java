@@ -2,20 +2,16 @@ package com.sannmizu.nearby_alumni.NetUtils;
 
 import com.google.gson.annotations.SerializedName;
 
-import org.simpleframework.xml.Element;
-import org.simpleframework.xml.Root;
-
-import retrofit2.Call;
+import io.reactivex.Observable;
 import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.POST;
 
-@Root(name = "login")
 public class LoginResponse extends MyResponse<LoginResponse.LoginData>{
     public static interface LoginService {
         @FormUrlEncoded
         @POST("app/login")
-        Call<LoginResponse> login(@Field("value") String value);
+        Observable<LoginResponse> login(@Field("value") String value);
     }
     public static class LoginData {
         @SerializedName("id")
