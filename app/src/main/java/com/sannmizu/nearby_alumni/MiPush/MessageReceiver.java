@@ -1,23 +1,31 @@
 package com.sannmizu.nearby_alumni.MiPush;
 
 import android.annotation.SuppressLint;
+import android.app.Application;
+import android.app.ApplicationErrorReport;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
-import android.os.Message;
+import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
 
 import com.google.gson.Gson;
-import com.sannmizu.nearby_alumni.MainActivity;
-import com.sannmizu.nearby_alumni.NetUtils.MyResponse;
-import com.sannmizu.nearby_alumni.R;
+import com.sannmizu.nearby_alumni.Database.ChatRecord;
+import com.sannmizu.nearby_alumni.MiPush.Bean.ChatBean;
+import com.sannmizu.nearby_alumni.MiPush.Bean.InfoBean;
+import com.sannmizu.nearby_alumni.chat.ChatActivity;
+import com.sannmizu.nearby_alumni.chat.RecordObject;
+import com.sannmizu.nearby_alumni.utils.AESUtils;
+import com.sannmizu.nearby_alumni.utils.SharedPreUtils;
 import com.xiaomi.mipush.sdk.ErrorCode;
 import com.xiaomi.mipush.sdk.MiPushClient;
 import com.xiaomi.mipush.sdk.MiPushCommandMessage;
 import com.xiaomi.mipush.sdk.MiPushMessage;
 import com.xiaomi.mipush.sdk.PushMessageReceiver;
+
+import org.litepal.LitePal;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -67,41 +75,38 @@ public class MessageReceiver extends PushMessageReceiver {
         Log.v(NearbyApplication.TAG,
                 "onReceivePassThroughMessage is called. " + message.toString());
 
-        if (!TextUtils.isEmpty(message.getTopic())) {
-            mTopic = message.getTopic();
-        } else if (!TextUtils.isEmpty(message.getAlias())) {
-            mAlias = message.getAlias();
-        }
-
     }
 
     @Override
     public void onNotificationMessageClicked(Context context, MiPushMessage message) {
         Log.v(NearbyApplication.TAG,
                 "onNotificationMessageClicked is called. " + message.toString());
-
-        if (!TextUtils.isEmpty(message.getTopic())) {
-            mTopic = message.getTopic();
-        } else if (!TextUtils.isEmpty(message.getAlias())) {
-            mAlias = message.getAlias();
-        }
-
     }
 
     @Override
     public void onNotificationMessageArrived(Context context, MiPushMessage message) {
         Log.v(NearbyApplication.TAG,
                 "onNotificationMessageArrived is called. " + message.toString());
-        FromMessage meg = (new Gson()).fromJson(message.getContent(), FromMessage.class);
-        InternetDemo.logList.add("新信息:\n来自：" + meg.getName() + "\n内容：" + meg.getContent());
-        NearbyApplication.getHandler().sendEmptyMessage(1);
-
-        if (!TextUtils.isEmpty(message.getTopic())) {
-            mTopic = message.getTopic();
-        } else if (!TextUtils.isEmpty(message.getAlias())) {
-            mAlias = message.getAlias();
+       //解析数据
+        Gson gson = new Gson();
+        switch(message.getNotifyId()) {
+            case 1:
+                String content = message.getContent();
+                ChatBean information = gson.fromJson(content, ChatBean.class);
+                //存进数据库
+                ChatRecord chatRecord = new ChatRecord(information.getData());
+                LitePal.initialize(context);
+                boolean b = chatRecord.save();
+                //广播通知
+                Bundle bundle = new Bundle();
+                bundle.putInt("user_id", chatRecord.getUser_id());
+                bundle.putInt("friend_id", chatRecord.getFriend_id());
+                bundle.putParcelable("message", new RecordObject(chatRecord));
+                Intent intent = new Intent("sannmizu.chat.NEW_MESSAGE");
+                intent.putExtras(bundle);
+                context.sendBroadcast(intent);
+                break;
         }
-
     }
 
     @Override

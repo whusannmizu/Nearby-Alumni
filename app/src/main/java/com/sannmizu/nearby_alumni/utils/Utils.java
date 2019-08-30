@@ -1,4 +1,8 @@
-package com.sannmizu.nearby_alumni.Utils;
+package com.sannmizu.nearby_alumni.utils;
+
+import android.content.Context;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 
 public class Utils {
     public static String getRandomString(int length) {
@@ -22,5 +26,13 @@ public class Utils {
         data = data.replace("“","\"");
         data = data.replace("”","\"");
         return data;
+    }
+    public static String getLogToken(Context context) {
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
+        return sharedPreferences.getString("logToken", "");
+    }
+    public static String getConnToken(Context context) {
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
+        return sharedPreferences.getString("connToken", "");
     }
 }

@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:drawable="@drawable/drawable_search1"
+        android:width="36dp"
+        android:height="36dp"
+        />
+</selector>

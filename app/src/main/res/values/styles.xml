@@ -13,7 +13,7 @@
         <item name="android:textColor">@color/text</item>
     </style>
 
-    <style name="file_toolbar" parent="Base.Widget.AppCompat.Toolbar">
+    <style name="chat_toolbar" parent="Base.Widget.AppCompat.Toolbar">
         <item name="contentInsetStart">0dp</item>
         <item name="contentInsetStartWithNavigation">0dp</item>
     </style>

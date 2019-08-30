@@ -2,6 +2,7 @@
     <string name="app_name">Nearby-Alumni</string>
     <string name="default_string">default</string>
     <string name="sort">排序方式</string>
+    <string name="search_friend">搜索用户</string>
     <string name="ServerBaseUrl">http://sannmizu.picp.net:22105/</string>
     <string name="connect_aes_key">connect_aes_key</string>
     <string name="connect_aes_iv">connect_aes_iv</string>

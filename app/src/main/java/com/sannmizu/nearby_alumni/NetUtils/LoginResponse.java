@@ -14,8 +14,8 @@ public class LoginResponse extends MyResponse<LoginResponse.LoginData>{
         Observable<LoginResponse> login(@Field("value") String value);
     }
     public static class LoginData {
-        @SerializedName("id")
-        private  String id;
+        @SerializedName("userId")
+        private  int id;
         @SerializedName("logToken")
         private String logToken;
         @SerializedName("expiretime")
@@ -37,11 +37,11 @@ public class LoginResponse extends MyResponse<LoginResponse.LoginData>{
             this.expire_time = expire_time;
         }
 
-        public String getId() {
+        public int getId() {
             return id;
         }
 
-        public void setId(String id) {
+        public void setId(int id) {
             this.id = id;
         }
     }

@@ -1,4 +1,4 @@
-package com.sannmizu.nearby_alumni.Utils;
+package com.sannmizu.nearby_alumni.utils;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -16,7 +16,6 @@ import java.io.Reader;
 import java.io.StringReader;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Type;
-import java.util.prefs.PreferencesFactory;
 
 import okhttp3.MediaType;
 import okhttp3.RequestBody;

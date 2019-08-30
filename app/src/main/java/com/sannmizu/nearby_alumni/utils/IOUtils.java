@@ -1,4 +1,4 @@
-package com.sannmizu.nearby_alumni.Utils;
+package com.sannmizu.nearby_alumni.utils;
 
 import android.content.Context;
 

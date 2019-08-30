@@ -27,7 +27,12 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".MiPush.InternetDemo"></activity>
+
+        <service
+            android:name=".InitService"
+            android:enabled="true"
+            android:exported="true" />
+
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -35,6 +40,11 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".MiPush.InternetDemo" />
+        <activity android:name=".ChatListActivity" />
+        <activity android:name=".chat.FriendListActivity" />
+        <activity android:name=".chat.SearchFriendActivity" />
+        <activity android:name=".chat.ChatActivity" />
 
         <service
             android:name="com.xiaomi.push.service.XMPushService"

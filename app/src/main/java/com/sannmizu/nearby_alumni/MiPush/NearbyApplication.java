@@ -11,10 +11,12 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.widget.Toast;
 
-import com.sannmizu.nearby_alumni.MainActivity;
+import com.sannmizu.nearby_alumni.utils.SharedPreUtils;
 import com.xiaomi.channel.commonutils.logger.LoggerInterface;
 import com.xiaomi.mipush.sdk.Logger;
 import com.xiaomi.mipush.sdk.MiPushClient;
+
+import org.litepal.LitePal;
 
 import java.util.List;
 
@@ -42,7 +44,11 @@ public class NearbyApplication extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
-
+        //数据库
+        LitePal.initialize(this);
+        LitePal.getDatabase();
+        //Utils
+        SharedPreUtils.initialize(this);
         // 注册push服务，注册成功后会向MessageReceiver发送广播
         // 可以从MessageReceiver的onCommandResult方法中MiPushCommandMessage对象参数中获取注册信息
         if (shouldInit()) {

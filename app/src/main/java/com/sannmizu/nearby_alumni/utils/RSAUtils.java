@@ -1,15 +1,10 @@
-package com.sannmizu.nearby_alumni.Utils;
+package com.sannmizu.nearby_alumni.utils;
 
 import android.util.Base64;
 
-import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.security.KeyFactory;
-import java.security.NoSuchAlgorithmException;
 import java.security.PublicKey;
-import java.security.interfaces.RSAPublicKey;
 import java.security.spec.X509EncodedKeySpec;
 
 import javax.crypto.Cipher;

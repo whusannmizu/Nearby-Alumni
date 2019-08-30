@@ -1,4 +1,4 @@
-package com.sannmizu.nearby_alumni.Utils;
+package com.sannmizu.nearby_alumni.utils;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -59,5 +59,15 @@ public class AESUtils {
             return "";
         }
         return encrypt(data, key, iv);
+    }
+
+    public static String decryptFromLocal(String data, Context context) {
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
+        String key = sharedPreferences.getString(context.getString(R.string.connect_aes_key), "null");
+        String iv = sharedPreferences.getString(context.getString(R.string.connect_aes_iv), "null");
+        if(key == "null" || iv == "null") {
+            return "";
+        }
+        return decrypt(data, key, iv);
     }
 }

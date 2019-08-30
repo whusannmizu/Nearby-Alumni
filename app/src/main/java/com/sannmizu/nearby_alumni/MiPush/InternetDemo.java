@@ -20,28 +20,23 @@ import com.sannmizu.nearby_alumni.NetUtils.ConnectResponse;
 import com.sannmizu.nearby_alumni.NetUtils.LoginResponse;
 import com.sannmizu.nearby_alumni.NetUtils.RegisterResponse;
 import com.sannmizu.nearby_alumni.R;
-import com.sannmizu.nearby_alumni.Utils.AESUtils;
-import com.sannmizu.nearby_alumni.Utils.JsonConverterFactory;
-import com.sannmizu.nearby_alumni.Utils.MD5Utils;
-import com.sannmizu.nearby_alumni.Utils.RSAUtils;
-import com.sannmizu.nearby_alumni.Utils.Utils;
+import com.sannmizu.nearby_alumni.utils.AESUtils;
+import com.sannmizu.nearby_alumni.utils.JsonConverterFactory;
+import com.sannmizu.nearby_alumni.utils.MD5Utils;
+import com.sannmizu.nearby_alumni.utils.RSAUtils;
+import com.sannmizu.nearby_alumni.utils.Utils;
 import com.xiaomi.mipush.sdk.MiPushClient;
 
-import java.io.IOException;
 import java.util.Date;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
-import io.reactivex.Observable;
 import io.reactivex.ObservableSource;
 import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Function;
 import io.reactivex.schedulers.Schedulers;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
@@ -163,12 +158,12 @@ public class InternetDemo extends AppCompatActivity {
                                 .flatMap(new Function<LoginResponse, ObservableSource<ConnectResponse>>() {
                                     @Override
                                     public ObservableSource<ConnectResponse> apply(LoginResponse loginResponse) throws Exception {
-                                        String id = loginResponse.getData().getId();
+                                        int id = loginResponse.getData().getId();
                                         String logToken = loginResponse.getData().getLogToken();
                                         String expire_time = loginResponse.getData().getExpire_time();
                                         //store(id, logToken, expire_time);数据库中存下logToken和expire_time，
                                         // 之后在logToken没有过期，且没有切换账号时，就不需要再登录了
-                                        editor.putString("id",id);
+                                        editor.putInt("currentUser",id);
                                         editor.putString("logToken",logToken);
                                         editor.putString("expire_time",expire_time);
                                         editor.putString("logToken", loginResponse.getData().getLogToken());
@@ -240,10 +235,10 @@ public class InternetDemo extends AppCompatActivity {
                         String text = editText.getText().toString();
                         String jsonStr = "{\"content\":\"测试数据:"+ text +"\"}";
                         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
-                        String id = sharedPreferences.getString("id","null");
+                        int id = sharedPreferences.getInt("id",0);
                         String logToken = sharedPreferences.getString("logToken", "null");
                         String connToken = sharedPreferences.getString("connToken", "null");
-                        if(id == "null" || logToken == "null") {    //其实还要判断logToken是否失效
+                        if(id == 0 || logToken == "null") {    //其实还要判断logToken是否失效
                             runOnUiThread(()->{
                                 Toast.makeText(InternetDemo.this, "请先登录", Toast.LENGTH_SHORT).show();
                             });

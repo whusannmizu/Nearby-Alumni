@@ -2,13 +2,12 @@ package com.sannmizu.nearby_alumni.NetUtils;
 
 import com.google.gson.JsonObject;
 import com.google.gson.annotations.SerializedName;
-import com.sannmizu.nearby_alumni.Utils.MD5Utils;
-import com.sannmizu.nearby_alumni.Utils.RSAUtils;
+import com.sannmizu.nearby_alumni.utils.MD5Utils;
+import com.sannmizu.nearby_alumni.utils.RSAUtils;
 
 import java.util.Date;
 
 import io.reactivex.Observable;
-import retrofit2.Call;
 import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.POST;
@@ -37,14 +36,14 @@ public class RegisterResponse extends MyResponse<RegisterResponse.RegisterData>{
     }
 
     public static class RegisterData {
-        @SerializedName("id")
-        private String user_id;
+        @SerializedName("userId")
+        private int user_id;
 
-        public String getUser_id() {
+        public int getUser_id() {
             return user_id;
         }
 
-        public void setUser_id(String user_id) {
+        public void setUser_id(int user_id) {
             this.user_id = user_id;
         }
     }
