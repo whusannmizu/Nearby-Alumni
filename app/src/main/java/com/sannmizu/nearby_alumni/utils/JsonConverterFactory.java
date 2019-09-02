@@ -85,12 +85,8 @@ public class JsonConverterFactory extends Converter.Factory {
             //再将数据post给服务器，同时要注意，你的T到底指的那个对象
 
             //加密操作，返回字节数组
-            SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
-            String key = sharedPreferences.getString(context.getString(R.string.connect_aes_key), "1234567890000000");
-            String iv = sharedPreferences.getString(context.getString(R.string.connect_aes_iv), "1234567890000000");
-            String encrypt = AESUtils.encrypt(value.toString(), key, iv);
+            String encrypt = AESUtils.encryptFromLocal(value.toString());
 
-            Log.i("sannmizu.JsonConverter","使用的密钥是" + key + "|" + iv);
 
             //传入字节数组，创建RequestBody 对象
             return RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"),encrypt.getBytes());
@@ -128,16 +124,11 @@ public class JsonConverterFactory extends Converter.Factory {
             String string = responseBody.string();
 
             //对字节数组进行解密操作
-            SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
-            String key = sharedPreferences.getString(context.getString(R.string.connect_aes_key), "1234567890000000");
-            String iv = sharedPreferences.getString(context.getString(R.string.connect_aes_iv), "1234567890000000");
-            String decryptString = AESUtils.decrypt(string, key, iv);
+            String decryptString = AESUtils.decryptFromLocal(string);
 
             //对解密的字符串进行处理
             int position = decryptString.lastIndexOf("}");
             String jsonString = decryptString.substring(0,position+1);
-
-            Log.i("sannmizu.JsonConverter","使用的密钥是" + key + "|" + iv);
 
             //这部分代码参考GsonConverterFactory中GsonResponseBodyConverter<T>的源码对json的处理
             Reader reader = StringToReader(jsonString);

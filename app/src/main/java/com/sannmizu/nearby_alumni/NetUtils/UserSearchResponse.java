@@ -26,9 +26,9 @@ public class UserSearchResponse extends MyResponse<UserSearchResponse.UserSearch
         @GET("account/user/{userId}/all")
         Observable<MyResponse<User>> searchById(@Path("userId")String userId);
     }
-    public static UserSearchService generateService(Context context) {
+    public static UserSearchService generateService() {
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(context.getString(R.string.ServerBaseUrl))
+                .baseUrl(Net.BaseHost)
                 .addConverterFactory(GsonConverterFactory.create())
                 .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                 .build();

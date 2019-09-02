@@ -157,8 +157,8 @@ public class SearchFriendActivity extends AppCompatActivity {
     }
 
     private void searchUser(String data) {
-        Observable<UserSearchResponse> tel = UserSearchResponse.generateService(this).search("tel", data).subscribeOn(Schedulers.io());
-        Observable<UserSearchResponse> name = UserSearchResponse.generateService(this).search("name", data, 1).subscribeOn(Schedulers.io());
+        Observable<UserSearchResponse> tel = UserSearchResponse.generateService().search("tel", data).subscribeOn(Schedulers.io());
+        Observable<UserSearchResponse> name = UserSearchResponse.generateService().search("name", data, 1).subscribeOn(Schedulers.io());
         Observable<String> userFromId = Observable.just(data);
 
         Observable<String> userFromTelAndName =
@@ -183,7 +183,7 @@ public class SearchFriendActivity extends AppCompatActivity {
                 .flatMap(new Function<String, ObservableSource<MyResponse<User>>>() {
                     @Override
                     public ObservableSource<MyResponse<User>> apply(String s) throws Exception {
-                        return UserSearchResponse.generateService(SearchFriendActivity.this).searchById(s);
+                        return UserSearchResponse.generateService().searchById(s);
                     }
                 })
                 .filter(response -> response.getCode() == 0)

@@ -44,22 +44,39 @@
             android:inputType="textMultiLine"
             android:lines="4"
             android:minLines="1"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"
-            android:layout_marginTop="6dp"
-            android:layout_marginBottom="6dp"
+            android:layout_margin="6dp"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/send_button"
+            app:layout_constraintEnd_toStartOf="@+id/choose_picture"
             app:layout_constraintHorizontal_weight="1"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
-        <Button
-            android:id="@+id/send_button"
+        <ImageButton
+            android:id="@+id/choose_picture"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="send"
+            android:layout_margin="4dp"
+            android:background="@drawable/vector_drawable_pictrue"
             app:layout_constraintStart_toEndOf="@id/input_text"
+            app:layout_constraintEnd_toStartOf="@id/send_button"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"/>
+        <Button
+            android:id="@+id/send_button"
+            android:visibility="gone"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="发送"
+            android:textColor="#fff"
+            android:background="@drawable/bt_shape"
+            android:minHeight="0dp"
+            android:minWidth="0dp"
+            android:height="38dp"
+            android:paddingLeft="13dp"
+            android:paddingRight="13dp"
+            android:layout_margin="4dp"
+            app:layout_constraintStart_toEndOf="@id/choose_picture"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"/>
     </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -6,7 +6,7 @@ import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
-public class MD5Utils {
+public class MD5Utils extends Util{
     public static String md5(@NotNull String plainText) {
         byte[] secretBytes = null;
         try {

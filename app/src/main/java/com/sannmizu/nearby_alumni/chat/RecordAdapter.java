@@ -1,8 +1,11 @@
 package com.sannmizu.nearby_alumni.chat;
 
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -10,6 +13,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.sannmizu.nearby_alumni.R;
+import com.sannmizu.nearby_alumni.cacheUtils.MyBitmapUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,6 +24,7 @@ public class RecordAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
     public static final int SendMsg = 0;
     public static final int ReceiveMsg = 1;
     public static final int TimeMsg = 2;
+    public static final MyBitmapUtils mBitmapUtils = new MyBitmapUtils();
 
     public RecordAdapter(List<BaseObject> mRecordList) {
         this.mRecordList = mRecordList;
@@ -27,17 +32,21 @@ public class RecordAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 
     public static class LeftMsgHolder extends RecyclerView.ViewHolder {
         TextView textView;
+        ImageView imageView;
         public LeftMsgHolder(@NonNull View itemView) {
             super(itemView);
             textView = itemView.findViewById(R.id.left_msg);
+            imageView = itemView.findViewById(R.id.left_image);
         }
     }
     public static class RightMsgHolder extends RecyclerView.ViewHolder {
         TextView textView;
+        ImageView imageView;
         ProgressBar progressBar;
         public RightMsgHolder(@NonNull View itemView) {
             super(itemView);
             textView = itemView.findViewById(R.id.right_msg);
+            imageView = itemView.findViewById(R.id.right_image);
             progressBar = itemView.findViewById(R.id.progress_bar);
         }
     }
@@ -84,19 +93,43 @@ public class RecordAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
             case SendMsg: {
                 RecordObject object = (RecordObject) mRecordList.get(position);
                 if (object.isText()) {
+                    ((RightMsgHolder) holder).imageView.setVisibility(View.GONE);
+                    ((RightMsgHolder) holder).textView.setVisibility(View.VISIBLE);
                     ((RightMsgHolder) holder).textView.setText(object.getContent());
+                } else {
+                    ((RightMsgHolder) holder).imageView.setVisibility(View.VISIBLE);
+                    ((RightMsgHolder) holder).textView.setVisibility(View.GONE);
+                    //获得图片bitmap
+                    mBitmapUtils.disPlay(((RightMsgHolder) holder).imageView, object.getContent());
                 }
                 if (mWhichList.contains(position)) {
                     ((RightMsgHolder) holder).progressBar.setVisibility(View.VISIBLE);
                 } else {
                     ((RightMsgHolder) holder).progressBar.setVisibility(View.GONE);
                 }
+                if(!((RightMsgHolder) holder).imageView.hasOnClickListeners()) {
+                    ((RightMsgHolder) holder).imageView.setOnClickListener(v->{
+                        //TODO:查看大图
+                    });
+                }
             }
                 break;
             case ReceiveMsg: {
                 RecordObject object = (RecordObject) mRecordList.get(position);
                 if (object.isText()) {
+                    ((LeftMsgHolder) holder).imageView.setVisibility(View.GONE);
+                    ((LeftMsgHolder) holder).textView.setVisibility(View.VISIBLE);
                     ((LeftMsgHolder) holder).textView.setText(object.getContent());
+                } else {
+                    ((LeftMsgHolder) holder).imageView.setVisibility(View.VISIBLE);
+                    ((LeftMsgHolder) holder).textView.setVisibility(View.GONE);
+                    //获得图片bitmap
+                    mBitmapUtils.disPlay(((LeftMsgHolder) holder).imageView, object.getContent());
+                }
+                if(!((LeftMsgHolder) holder).imageView.hasOnClickListeners()) {
+                    ((LeftMsgHolder) holder).imageView.setOnClickListener(v->{
+
+                    });
                 }
             }
                 break;

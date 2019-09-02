@@ -4,6 +4,7 @@ import android.content.Context;
 
 import com.google.gson.annotations.SerializedName;
 import com.sannmizu.nearby_alumni.R;
+import com.sannmizu.nearby_alumni.utils.AESUtils;
 
 import io.reactivex.Observable;
 import retrofit2.Retrofit;
@@ -20,14 +21,24 @@ public class ChatResponse extends MyResponse<ChatResponse.ChatData> {
         @FormUrlEncoded
         @POST("chat/user/{userId}")
         Observable<ChatResponse> chat(@Path("userId")int userId, @Field("value")String value, @Query("logToken")String logToken, @Query("connToken")String connToken);
+
+        @FormUrlEncoded
+        @POST("chat/user/{userId}")
+        Observable<ChatResponse> chat(@Path("userId")int userId, @Field("value")String value, @Field("extra.pic")String base64Pic, @Query("logToken")String logToken, @Query("connToken")String connToken);
     }
-    public static ChatService generateService(Context context) {
+    public static ChatService generateService() {
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(context.getString(R.string.ServerBaseUrl))
+                .baseUrl(Net.BaseHost)
                 .addConverterFactory(GsonConverterFactory.create())
                 .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                 .build();
         return retrofit.create(ChatService.class);
+    }
+    public static String getTextRequest(String content) {
+        return AESUtils.encryptFromLocal( "{\"content\":\"" + content + "\"}");
+    }
+    public static String getPictureRequest(String picType) {
+        return AESUtils.encryptFromLocal( "{\"content\":\"[图片]\",\"extra\":{\"extra.pic\":\"" + picType + "\"}}");
     }
     public static class ChatData{
         @SerializedName("state")

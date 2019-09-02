@@ -4,15 +4,28 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_margin="10dp">
-
-    <TextView
-        android:id="@+id/left_msg"
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/box"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:maxWidth="360dp"
         android:layout_gravity="start"
-        android:gravity="center"
         android:background="@drawable/message_left"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent" >
+        <ImageView
+            android:visibility="gone"
+            android:id="@+id/left_image"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:src="@drawable/vector_drawable_defaultpicture"/>
+        <TextView
+            android:id="@+id/left_msg"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:paddingTop="1dp"
+            android:paddingBottom="1dp"
+            android:paddingRight="4dp"
+            android:paddingLeft="4dp"/>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -4,7 +4,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 
-public class Utils {
+public class Utils extends Util{
     public static String getRandomString(int length) {
         char[] str= new char[length];
         int i = 0;
@@ -27,12 +27,12 @@ public class Utils {
         data = data.replace("”","\"");
         return data;
     }
-    public static String getLogToken(Context context) {
-        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
+    public static String getLogToken() {
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(sContext);
         return sharedPreferences.getString("logToken", "");
     }
-    public static String getConnToken(Context context) {
-        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
+    public static String getConnToken() {
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(sContext);
         return sharedPreferences.getString("connToken", "");
     }
 }

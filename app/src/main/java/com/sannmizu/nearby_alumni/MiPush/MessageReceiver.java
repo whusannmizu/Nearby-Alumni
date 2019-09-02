@@ -70,6 +70,8 @@ public class MessageReceiver extends PushMessageReceiver {
     private String mStartTime;
     private String mEndTime;
 
+    private static final int NEW_MESSAGE = 1;
+    private static final int NEW_FRIEND = 2;
     @Override
     public void onReceivePassThroughMessage(Context context, MiPushMessage message) {
         Log.v(NearbyApplication.TAG,
@@ -90,7 +92,8 @@ public class MessageReceiver extends PushMessageReceiver {
        //解析数据
         Gson gson = new Gson();
         switch(message.getNotifyId()) {
-            case 1:
+            //新消息通知
+            case NEW_MESSAGE:
                 String content = message.getContent();
                 ChatBean information = gson.fromJson(content, ChatBean.class);
                 //存进数据库
@@ -106,6 +109,8 @@ public class MessageReceiver extends PushMessageReceiver {
                 intent.putExtras(bundle);
                 context.sendBroadcast(intent);
                 break;
+            //好友申请通知
+            case NEW_FRIEND:
         }
     }
 

@@ -18,6 +18,7 @@ import com.google.gson.JsonObject;
 import com.sannmizu.nearby_alumni.NetUtils.ChatResponse;
 import com.sannmizu.nearby_alumni.NetUtils.ConnectResponse;
 import com.sannmizu.nearby_alumni.NetUtils.LoginResponse;
+import com.sannmizu.nearby_alumni.NetUtils.Net;
 import com.sannmizu.nearby_alumni.NetUtils.RegisterResponse;
 import com.sannmizu.nearby_alumni.R;
 import com.sannmizu.nearby_alumni.utils.AESUtils;
@@ -77,7 +78,7 @@ public class InternetDemo extends AppCompatActivity {
                         String requestStr = RegisterResponse.getRequestStr("tel", tel, pwd, name);
 
                         Retrofit retrofit = new Retrofit.Builder()
-                                .baseUrl(this.getString(R.string.ServerBaseUrl))
+                                .baseUrl(Net.BaseHost)
                                 .addConverterFactory(GsonConverterFactory.create())
                                 .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                                 .build();
@@ -145,7 +146,7 @@ public class InternetDemo extends AppCompatActivity {
                         requestRoot.add("data", requestData);
 
                         Retrofit retrofit = new Retrofit.Builder()
-                                .baseUrl(this.getString(R.string.ServerBaseUrl))
+                                .baseUrl(Net.BaseHost)
                                 .addConverterFactory(GsonConverterFactory.create())
                                 .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                                 .build();
@@ -181,7 +182,7 @@ public class InternetDemo extends AppCompatActivity {
                                         String requestStr = "{\"info\":\"" + info + "\", \"key\":\"" + key + "\", \"iv\":\"" + iv + "\", \"sign\":\"" + MD5Utils.md5(info + key + iv) + "\"}";
 
                                         Retrofit retrofit = new Retrofit.Builder()
-                                                .baseUrl(InternetDemo.this.getString(R.string.ServerBaseUrl))
+                                                .baseUrl(Net.BaseHost)
                                                 .addConverterFactory(JsonConverterFactory.create(InternetDemo.this)) //要传入一个Context
                                                 .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                                                 .build();
@@ -235,27 +236,27 @@ public class InternetDemo extends AppCompatActivity {
                         String text = editText.getText().toString();
                         String jsonStr = "{\"content\":\"测试数据:"+ text +"\"}";
                         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
-                        int id = sharedPreferences.getInt("id",0);
+                        int currentUser = sharedPreferences.getInt("currentUser",0);
                         String logToken = sharedPreferences.getString("logToken", "null");
                         String connToken = sharedPreferences.getString("connToken", "null");
-                        if(id == 0 || logToken == "null") {    //其实还要判断logToken是否失效
+                        if(currentUser == 0 || logToken == "null") {    //其实还要判断logToken是否失效
                             runOnUiThread(()->{
                                 Toast.makeText(InternetDemo.this, "请先登录", Toast.LENGTH_SHORT).show();
                             });
                         } else {
                             Retrofit retrofit = new Retrofit.Builder()
-                                    .baseUrl(this.getString(R.string.ServerBaseUrl))
+                                    .baseUrl(Net.BaseHost)
                                     .addConverterFactory(GsonConverterFactory.create())
                                     .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                                     .build();
                             ChatResponse.ChatService service = retrofit.create(ChatResponse.ChatService.class);
-                            String encrypted = AESUtils.encryptFromLocal(jsonStr, InternetDemo.this);
+                            String encrypted = AESUtils.encryptFromLocal(jsonStr);
                             if(encrypted == "" || connToken == "null") {  //其实还要判断connToken是否失效
                                 runOnUiThread(()->{
                                     Toast.makeText(InternetDemo.this, "请先建立私密链接", Toast.LENGTH_SHORT).show();
                                 });
                             } else {
-                                service.chat(id, encrypted, logToken, connToken)
+                                service.chat(currentUser, encrypted, logToken, connToken)
                                         .subscribeOn(Schedulers.io())
                                         .observeOn(AndroidSchedulers.mainThread())
                                         .subscribe(new Observer<ChatResponse>() {

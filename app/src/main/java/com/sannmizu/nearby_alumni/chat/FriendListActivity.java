@@ -135,7 +135,7 @@ public class FriendListActivity extends AppCompatActivity {
                 }
             });
 
-            Observable<List<BaseObject>> network = FriendsResponse.generateService(this).getFriendList(Utils.getLogToken(this))
+            Observable<List<BaseObject>> network = FriendsResponse.generateService().getFriendList(Utils.getLogToken())
                     .flatMap(new Function<FriendsResponse, ObservableSource<List<BaseObject>>>() {
                         @Override
                         public ObservableSource<List<BaseObject>> apply(FriendsResponse friendsResponse) throws Exception {

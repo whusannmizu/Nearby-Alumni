@@ -9,7 +9,7 @@ import java.security.spec.X509EncodedKeySpec;
 
 import javax.crypto.Cipher;
 
-public class RSAUtils {
+public class RSAUtils extends Util {
     //构建Cipher实例时所传入的的字符串，默认为"RSA/NONE/PKCS1Padding"
     private static String sTransform = "RSA/NONE/PKCS1Padding";
     //进行Base64转码时的flag设置，默认为Base64.DEFAULT

@@ -5,12 +5,12 @@ import android.content.Context;
 import java.io.IOException;
 import java.io.InputStream;
 
-public class IOUtils {
-    public static String readAssertsFile(Context context, String fileName) {
+public class IOUtils extends Util{
+    public static String readAssertsFile(String fileName) {
         InputStream is = null;
         String msg = null;
         try {
-            is = context.getResources().getAssets().open(fileName);
+            is = sContext.getResources().getAssets().open(fileName);
             byte[] bytes = new byte[is.available()];
             is.read(bytes);
             msg = new String(bytes);

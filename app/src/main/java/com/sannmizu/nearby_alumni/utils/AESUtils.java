@@ -11,7 +11,7 @@ import javax.crypto.Cipher;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
 
-public class AESUtils {
+public class AESUtils extends Util {
     //构建Cipher实例时所传入的的字符串，默认为"RSA/NONE/PKCS1Padding"
     private static String sTransform = "AES/CBC/PKCS5Padding";
     //进行Base64转码时的flag设置，默认为Base64.DEFAULT
@@ -51,20 +51,20 @@ public class AESUtils {
         return new String(decrypted);
     }
 
-    public static String encryptFromLocal(String data, Context context) {
-        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
-        String key = sharedPreferences.getString(context.getString(R.string.connect_aes_key), "null");
-        String iv = sharedPreferences.getString(context.getString(R.string.connect_aes_iv), "null");
+    public static String encryptFromLocal(String data) {
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(sContext);
+        String key = sharedPreferences.getString(sContext.getString(R.string.connect_aes_key), "null");
+        String iv = sharedPreferences.getString(sContext.getString(R.string.connect_aes_iv), "null");
         if(key == "null" || iv == "null") {
             return "";
         }
         return encrypt(data, key, iv);
     }
 
-    public static String decryptFromLocal(String data, Context context) {
-        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
-        String key = sharedPreferences.getString(context.getString(R.string.connect_aes_key), "null");
-        String iv = sharedPreferences.getString(context.getString(R.string.connect_aes_iv), "null");
+    public static String decryptFromLocal(String data) {
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(sContext);
+        String key = sharedPreferences.getString(sContext.getString(R.string.connect_aes_key), "null");
+        String iv = sharedPreferences.getString(sContext.getString(R.string.connect_aes_iv), "null");
         if(key == "null" || iv == "null") {
             return "";
         }

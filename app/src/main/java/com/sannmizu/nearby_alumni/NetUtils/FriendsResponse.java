@@ -20,9 +20,9 @@ public class FriendsResponse extends MyResponse<FriendsResponse.FriendsData> {
         @GET("account/friends/")
         Observable<FriendsResponse> getFriendList(@Query("logToken")String logToken);
     }
-    public static FriendsService generateService(Context context) {
+    public static FriendsService generateService() {
         Retrofit retrofit = new Retrofit.Builder()
-                            .baseUrl(context.getString(R.string.ServerBaseUrl))
+                            .baseUrl(Net.BaseHost)
                             .addConverterFactory(GsonConverterFactory.create())
                             .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                             .build();

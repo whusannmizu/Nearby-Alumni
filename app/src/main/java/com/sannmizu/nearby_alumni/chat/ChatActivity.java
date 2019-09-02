@@ -1,31 +1,57 @@
 package com.sannmizu.nearby_alumni.chat;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
+import android.Manifest;
 import android.content.BroadcastReceiver;
+import android.content.ContentUris;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.pm.PackageManager;
+import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
+import android.provider.DocumentsContract;
+import android.provider.MediaStore;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.util.Base64;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.sannmizu.nearby_alumni.Database.ChatRecord;
 import com.sannmizu.nearby_alumni.NetUtils.ChatResponse;
 import com.sannmizu.nearby_alumni.R;
+import com.sannmizu.nearby_alumni.cacheUtils.LocalCacheUtils;
 import com.sannmizu.nearby_alumni.utils.AESUtils;
 import com.sannmizu.nearby_alumni.utils.SharedPreUtils;
+import com.sannmizu.nearby_alumni.utils.Utils;
 
 import org.litepal.LitePal;
 import org.litepal.crud.callback.FindMultiCallback;
 
+import java.io.ByteArrayOutputStream;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.nio.ByteBuffer;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -44,6 +70,7 @@ public class ChatActivity extends AppCompatActivity {
         intent.putExtra("name", name);
         context.startActivity(intent);
     }
+    public static final int CHOOSE_PHOTO = 2;
 
     private int user_id;
     private int friend_id;
@@ -58,6 +85,7 @@ public class ChatActivity extends AppCompatActivity {
     private RecordAdapter mRecordAdapter;
     private EditText mEditTv;
     private Button mSendBtn;
+    private ImageButton mSendPic;
 
     private IntentFilter intentFilter;
     private NewMessageReceiver newMessageReceiver;
@@ -100,6 +128,7 @@ public class ChatActivity extends AppCompatActivity {
         mRecyclerView = findViewById(R.id.recycle_view);
         mEditTv = findViewById(R.id.input_text);
         mSendBtn = findViewById(R.id.send_button);
+        mSendPic = findViewById(R.id.choose_picture);
         mSwipeRefreshLayout = findViewById(R.id.swipe_refresh);
     }
 
@@ -115,6 +144,28 @@ public class ChatActivity extends AppCompatActivity {
         mToolbar.setNavigationOnClickListener(v->{
             finish();
         });
+        mEditTv.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+                if(editable.length() != 0) {
+                    mSendBtn.setVisibility(View.VISIBLE);
+                    mSendPic.setVisibility(View.GONE);
+                } else {
+                    mSendBtn.setVisibility(View.GONE);
+                    mSendPic.setVisibility(View.VISIBLE);
+                }
+            }
+        });
         mSendBtn.setOnClickListener(v->{
             if(mEditTv.getText().length() != 0) {
                 ChatRecord chatRecord = createMessage();
@@ -122,6 +173,9 @@ public class ChatActivity extends AppCompatActivity {
                 int position = showMessage(chatRecord);
                 sendMessage(chatRecord, position);
             }
+        });
+        mSendPic.setOnClickListener(v->{
+            choosePicture();
         });
         mSwipeRefreshLayout.setOnRefreshListener(()->{
             SharedPreUtils.putBoolean("FriendListExpired", true);
@@ -165,8 +219,8 @@ public class ChatActivity extends AppCompatActivity {
         return position;
     }
     private void sendMessage(ChatRecord chatRecord, int position) {
-        String sendValue = AESUtils.encryptFromLocal( "{\"content\":\"" + chatRecord.getContent() + "\"}", this);
-        ChatResponse.generateService(ChatActivity.this).chat(friend_id, sendValue, SharedPreUtils.getString("logToken", ""), SharedPreUtils.getString("connToken", ""))
+        String sendValue = ChatResponse.getTextRequest(chatRecord.getContent());
+        ChatResponse.generateService().chat(friend_id, sendValue, SharedPreUtils.getString("logToken", ""), SharedPreUtils.getString("connToken", ""))
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Observer<ChatResponse>() {
@@ -180,6 +234,8 @@ public class ChatActivity extends AppCompatActivity {
                         if(chatResponse.getCode() == 0) {
                             Toast.makeText(ChatActivity.this, chatResponse.getData().getState(), Toast.LENGTH_SHORT).show();
                             chatRecord.save();
+                        } else {
+                            //TODO:设置重试按钮
                         }
                     }
 
@@ -249,10 +305,165 @@ public class ChatActivity extends AppCompatActivity {
                     addToRecordList(bundle.getParcelable("message"), true);
                     mRecyclerView.getAdapter().notifyDataSetChanged();
                     mRecyclerView.smoothScrollToPosition(mChatRecordList.size() - 1);
+                    //TODO:改成有个气泡提示
                 }
             } catch (Exception e) {
                 e.printStackTrace();
             }
         }
+    }
+
+    private void choosePicture() {
+        if(ContextCompat.checkSelfPermission(ChatActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(ChatActivity.this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
+        } else {
+            openAlbum();
+        }
+    }
+    private void openAlbum() {
+        Intent intent = new Intent("android.intent.action.GET_CONTENT");
+        intent.setType("image/*");
+        startActivityForResult(intent, CHOOSE_PHOTO); //打开相册
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        switch (requestCode) {
+            case 1:
+                if(grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    openAlbum();
+                } else {
+                    Toast.makeText(this, "你拒绝了权限请求，无法打开相册", Toast.LENGTH_SHORT).show();
+                }
+                break;
+        }
+    }
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        switch (requestCode) {
+            case CHOOSE_PHOTO:
+                if(resultCode == RESULT_OK) {
+                    handleImage(data);
+                }
+        }
+    }
+
+    private void handleImage(Intent data) {
+        String imagePath = null;
+        Uri uri = data.getData();
+        if (DocumentsContract.isDocumentUri(this, uri)) {
+            //如果是document类型的Uri，则通过document id处理
+            String docId = DocumentsContract.getDocumentId(uri);
+            if("com.android.providers.media.documents".equals(uri.getAuthority())) {
+                String id = docId.split(":")[1];
+                //解析出数字格式的id
+                String selection = MediaStore.Images.Media._ID + "=" + id;
+                imagePath = getImagePath(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, selection);
+            } else if ("com.android.providers.downloads.documents".equals(uri.getAuthority())) {
+                Uri contentUri = ContentUris.withAppendedId(Uri.parse("content://downloads/public_downloads"), Long.valueOf(docId));
+                imagePath = getImagePath(contentUri, null);
+            }
+        } else if ("content".equalsIgnoreCase(uri.getScheme())) {
+            //如果是content类型的Uri，则使用普通方式处理
+            imagePath = getImagePath(uri, null);
+        } else if ("file".equalsIgnoreCase(uri.getScheme())) {
+            //如果是file类型的Uri，直接获取图片路径即可
+            imagePath = uri.getPath();
+        }
+        sendPicture(imagePath);
+    }
+    private String getImagePath(Uri uri, String selection) {
+        String path = null;
+        //通过Uri和selection来获取真实的图片路径
+        Cursor cursor = getContentResolver().query(uri,null, selection, null, null);
+        if (cursor != null) {
+            if (cursor.moveToFirst()) {
+                path = cursor.getString(cursor.getColumnIndex(MediaStore.Images.Media.DATA));
+            }
+            cursor.close();
+        }
+        return path;
+    }
+    private void sendPicture(String imagePath) {
+        Bitmap bitmap = getBitmap(imagePath);
+        ChatRecord chatRecord = createMessage(imagePath);
+        int position = showMessage(chatRecord, bitmap);
+        sendMessage(chatRecord, position, bitmap);
+    }
+    private Bitmap getBitmap(String imagePath) {
+        if(imagePath != null) {
+            return BitmapFactory.decodeFile(imagePath);
+        } else {
+            return null;
+        }
+    }
+    private ChatRecord createMessage(String url) {
+        ChatRecord chatRecord = new ChatRecord();
+        chatRecord.setUser_id(user_id);
+        chatRecord.setFriend_id(friend_id);
+        chatRecord.setSubject(0);
+        chatRecord.setContent(url);
+        chatRecord.setText(false);
+        chatRecord.setTime(new Date(System.currentTimeMillis()));
+        return chatRecord;
+    }
+    private int showMessage(ChatRecord chatRecord, Bitmap bitmap) {
+        //存入本地
+        LocalCacheUtils localCacheUtils = new LocalCacheUtils();
+        localCacheUtils.setBitmapToLocal(chatRecord.getContent(), bitmap);
+        //加入列表
+        int position = addToRecordList(new RecordObject(chatRecord), true);
+        mRecordAdapter.getWhichList().add(position);
+        mRecordAdapter.notifyItemChanged(position);
+        mRecyclerView.smoothScrollToPosition(position);
+        return position;
+    }
+    private void sendMessage(ChatRecord chatRecord, int position, Bitmap bitmap) {
+        String sendValue = ChatResponse.getPictureRequest("png");
+        String picString = getPNGFromBitmapToString(bitmap);
+        ChatResponse.generateService().chat(friend_id, sendValue, picString, Utils.getLogToken(), Utils.getConnToken())
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Observer<ChatResponse>() {
+                    @Override
+                    public void onSubscribe(Disposable d) {
+
+                    }
+
+                    @Override
+                    public void onNext(ChatResponse chatResponse) {
+                        if(chatResponse.getCode() == 0) {
+                            Toast.makeText(ChatActivity.this, chatResponse.getData().getState(), Toast.LENGTH_SHORT).show();
+                            chatRecord.save();
+                        } else {
+                            //TODO:设置重试按钮
+                        }
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        e.printStackTrace();
+                        mRecordAdapter.getWhichList().remove(Integer.valueOf(position));
+                        mRecordAdapter.notifyItemChanged(position);
+                    }
+
+                    @Override
+                    public void onComplete() {
+                        mRecordAdapter.getWhichList().remove(Integer.valueOf(position));
+                        mRecordAdapter.notifyItemChanged(position);
+                    }
+                });
+    }
+    private String getPNGFromBitmapToString(Bitmap bitmap) {
+        byte[] bytes;
+        try {
+            ByteArrayOutputStream outStream = new ByteArrayOutputStream();
+            bitmap.compress(Bitmap.CompressFormat.PNG, 100, outStream);
+            bytes = outStream.toByteArray();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+        return Base64.encodeToString(bytes, Base64.NO_WRAP);
     }
 }
