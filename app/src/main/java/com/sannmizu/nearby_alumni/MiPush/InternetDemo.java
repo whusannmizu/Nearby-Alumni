@@ -3,6 +3,7 @@ package com.sannmizu.nearby_alumni.MiPush;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -21,6 +22,7 @@ import com.sannmizu.nearby_alumni.NetUtils.LoginResponse;
 import com.sannmizu.nearby_alumni.NetUtils.Net;
 import com.sannmizu.nearby_alumni.NetUtils.RegisterResponse;
 import com.sannmizu.nearby_alumni.R;
+import com.sannmizu.nearby_alumni.denglu.guanzhu;
 import com.sannmizu.nearby_alumni.utils.AESUtils;
 import com.sannmizu.nearby_alumni.utils.JsonConverterFactory;
 import com.sannmizu.nearby_alumni.utils.MD5Utils;
@@ -59,7 +61,7 @@ public class InternetDemo extends AppCompatActivity {
         button3 = findViewById(R.id.chatDemo);
         progressBar = findViewById(R.id.progress_bar);
 
-        button1.setOnClickListener(v->{
+       button1.setOnClickListener(v->{
             LayoutInflater inflater = getLayoutInflater();
             View view= inflater.inflate(R.layout.register_demo, null);
             new AlertDialog.Builder(InternetDemo.this)
@@ -117,7 +119,6 @@ public class InternetDemo extends AppCompatActivity {
                     .setNegativeButton("取消", null)
                     .show();
         });
-
         button2.setOnClickListener(v->{
             LayoutInflater inflater = getLayoutInflater();
             View view= inflater.inflate(R.layout.login_demo, null);
@@ -204,6 +205,7 @@ public class InternetDemo extends AppCompatActivity {
                                             editor.putString(InternetDemo.this.getString(R.string.connect_aes_iv), connectResponse.getData().getAes().getIv());
                                             editor.putString("connToken", connectResponse.getData().getToken().getValue());
                                             editor.apply();
+                                            startActivity(new Intent(InternetDemo.this, guanzhu.class));
                                         } else {
                                             InternetDemo.logList.add("私密连接失败："+connectResponse.getReason());
                                         }

@@ -6,4 +6,21 @@
     <string name="ServerBaseUrl">http://sannmizu.picp.net:22105/</string>
     <string name="connect_aes_key">connect_aes_key</string>
     <string name="connect_aes_iv">connect_aes_iv</string>
+    <string name="register_input_username_hint">手机号或邮箱</string>
+    <string name="register_sms_auth_code">验证码</string>
+    <string name="register_sms_hint">获取验证码</string>
+    <string name="login_register_hint">注册</string>
+    <string name="register_username_hint">用户名</string>
+    <string name="register_pwd_hint">请输入至少六位数密码</string>
+    <string name="register_man_hint">男士</string>
+    <string name="register_female_hint">女士</string>
+    <string name="register_done_hint">完成</string>
+    <string name="retrieve_pwd_step_hint">下一步</string>
+    <string name="retrieve_pwd_email_label_one">邮箱用户找回密码</string>
+    <string name="retrieve_pwd_email_label">点击这里</string>
+    <string name="login_other_hint">其他方式登陆</string>
+    <string name="reset_pwd_hint">请至少输入六位新密码</string>
+    <string name="reset_pwd_submit">确认</string>
+    <string name="baseurl">https://app.cloopen.com:8883</string>
+    <string name="ziliao">返回主页</string>
 </resources>

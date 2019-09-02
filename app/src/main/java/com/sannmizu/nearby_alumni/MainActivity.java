@@ -15,6 +15,8 @@ import com.sannmizu.nearby_alumni.Database.LoadChinaArea;
 import com.sannmizu.nearby_alumni.MiPush.InternetDemo;
 import com.sannmizu.nearby_alumni.chat.ChatActivity;
 import com.sannmizu.nearby_alumni.chat.RecordAdapter;
+import com.sannmizu.nearby_alumni.denglu.MainActivity1;
+import com.sannmizu.nearby_alumni.denglu.MainActivity2;
 import com.xiaomi.mipush.sdk.MiPushClient;
 
 
@@ -38,8 +40,8 @@ public class MainActivity extends AppCompatActivity {
             startActivity(intent);
         });
         button3.setOnClickListener(v->{
-            Intent intent = new Intent(MainActivity.this, LruTestActivity.class);
-            startActivity(intent);
+            //Intent intent = new Intent(MainActivity.this, LruTestActivity.class);
+            //startActivity(intent);
         });
 
     }
