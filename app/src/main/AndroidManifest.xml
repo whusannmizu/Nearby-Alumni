@@ -27,7 +27,9 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-
+        <meta-data
+            android:name="com.example.myapplication3"
+            android:value="2f77a1efd798656ae49dfb88fe7a0d9d"/>
         <service
             android:name=".InitService"
             android:enabled="true"
