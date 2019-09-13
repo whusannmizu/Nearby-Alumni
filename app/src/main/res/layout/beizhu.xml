@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/btoolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="@drawable/title_bar"
+        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+        app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+        app:layout_scrollFlags="scroll|enterAlways|snap">
+    </androidx.appcompat.widget.Toolbar>
+    <TextView
+        android:id="@+id/btext1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="备注名"
+        android:textSize="16sp"/>
+    <EditText
+        android:id="@+id/bedit1"
+        android:layout_width="match_parent"
+        android:layout_height="20dp" />
+    <TextView
+        android:id="@+id/btext2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="描述"
+        android:textSize="16sp"/>
+    <EditText
+        android:id="@+id/bedit2"
+        android:layout_width="match_parent"
+        android:layout_height="20dp" />
+</LinearLayout>

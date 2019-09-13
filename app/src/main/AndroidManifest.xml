@@ -112,6 +112,16 @@
             android:windowSoftInputMode="adjustResize|stateHidden"
             android:label="我的关注">
         </activity>
+        <activity android:name=".denglu.gerenziliao"
+            android:launchMode="singleTop"
+            android:theme="@style/AppTheme1"
+            android:windowSoftInputMode="adjustPan|stateHidden"
+            android:label="详细资料"/>
+        <activity android:name=".denglu.beizhu"
+            android:launchMode="singleTop"
+            android:theme="@style/AppTheme1"
+            android:windowSoftInputMode="adjustPan|stateHidden"
+            android:label="备注"/>
         <service
             android:name="com.xiaomi.push.service.XMPushService"
             android:enabled="true"

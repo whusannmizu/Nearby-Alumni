@@ -1,5 +1,7 @@
 package com.sannmizu.nearby_alumni.NetUtils;
 
+import android.database.Observable;
+
 import com.google.gson.annotations.SerializedName;
 
 import retrofit2.Call;
@@ -8,10 +10,10 @@ import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.PUT;
 import retrofit2.http.Query;
 
-public class infoResponse extends MyResponse<infoResponse.infoData>{
+public class infoResponse extends MyResponse{
     public static interface infoService{
         @PUT("account/info")
-        Call<infoResponse> info(@Query("newInfo") String newInfo,@Query("logToken")String logToken,@Query("connToken")String connToken);
+        Observable<infoResponse> info(@Query("newInfo") String newInfo, @Query("logToken")String logToken, @Query("connToken")String connToken);
     }
     public static class infoData{
         @SerializedName("NewInfo")

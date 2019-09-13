@@ -1,5 +1,6 @@
 package com.sannmizu.nearby_alumni.denglu;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -18,6 +19,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
 import com.bumptech.glide.Glide;
+import com.sannmizu.nearby_alumni.NetUtils.MyResponse;
+import com.sannmizu.nearby_alumni.NetUtils.Net;
 import com.sannmizu.nearby_alumni.NetUtils.addresponse;
 import com.sannmizu.nearby_alumni.NetUtils.friendResponse;
 import com.sannmizu.nearby_alumni.R;
@@ -26,6 +29,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
+import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 public class guanzhu extends AppCompatActivity implements View.OnClickListener,MyOneLineView.OnRootClickListener{
@@ -34,7 +38,7 @@ public class guanzhu extends AppCompatActivity implements View.OnClickListener,M
     private SharedPreferences.Editor seditor;
     private ImageView opicture,obackground;
     private ScrollView scrollView;
-    private TextView gtext1,gtext2;
+    private TextView gtext1,gtext2,gt1,gt2;
     private Button gbutton1,gbutton2;
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -61,12 +65,18 @@ public class guanzhu extends AppCompatActivity implements View.OnClickListener,M
         gtwo.setRootPaddingLeftRight(20,-60);
         gtext1=findViewById(R.id.gtext1);
         gtext2=findViewById(R.id.gtext2);
+        gt1=findViewById(R.id.gt1);
+        gt1.setText(R.string.qianming);
+        gt2=findViewById(R.id.gt2);
+        String text3=spref.getString("qianming",null);
+        if (text3!=null)
+            gt2.setText(text3);
         String text1=spref.getString("note",null);
         if (text1!=null)
         {
             gtext1.setText(text1);
         }
-        String text2=spref.getString("qianming",null);
+        String text2=spref.getString("diqu",null);
         if (text2!=null)
         {
             gtext2.setText(text2);
@@ -84,19 +94,21 @@ public class guanzhu extends AppCompatActivity implements View.OnClickListener,M
             Bitmap bitmap=BitmapFactory.decodeFile(uri);
             opicture.setImageBitmap(bitmap);
         }
-        String uri1=spref.getString("bing_pic",null);
+        /*String uri1=spref.getString("bing_pic",null);
         if (uri1!=null)
         {
             Glide.with(this).load(uri1).into(obackground);
-        }
+        }*/
     }
 
     @Override
     public void onRootClick(View view) {
         switch ((int)view.getTag()){
             case 1:
+                startActivity(new Intent(guanzhu.this,beizhu.class));
                 break;
             case 2:
+                startActivity(new Intent(guanzhu.this,gerenziliao.class));
                 break;
         }
     }
@@ -128,7 +140,7 @@ public class guanzhu extends AppCompatActivity implements View.OnClickListener,M
             });
         } else {
             Retrofit retrofit = new Retrofit.Builder()
-                    .baseUrl(this.getString(R.string.ServerBaseUrl))
+                    .baseUrl(Net.BaseHost)
                     .addConverterFactory(GsonConverterFactory.create())
                     .build();
             friendResponse.friendService service=retrofit.create(friendResponse.friendService.class);
@@ -137,18 +149,18 @@ public class guanzhu extends AppCompatActivity implements View.OnClickListener,M
                 @Override
                 public void onResponse(retrofit2.Call<friendResponse> call, retrofit2.Response<friendResponse> response) {
                     Log.d("gqw", String.valueOf(response.body().getCode()));
-                    gbutton2.setText("连接成功");
+                    //gbutton2.setText("连接成功");
                     if (response.body().getCode()==0)
                     {
-                        /*if (userid==response.body().getData().getFriendlist().get(1).getUserId())
+                        /*if (userid==response.body().getData().getFriends().get(1).getId())
                         {
                             gbutton2.setText("删除好友");
                         }
                         else
                         {
                             gbutton2.setText("添加好友");
-                        }
-                       */
+                        }*/
+                        gbutton2.setText("添加好友");
                     }
                     else
                         gbutton2.setText("连接失败");
@@ -164,33 +176,63 @@ public class guanzhu extends AppCompatActivity implements View.OnClickListener,M
     public void addfriend(){
         spref=PreferenceManager.getDefaultSharedPreferences(this);
         String logToken = spref.getString("logToken", null);
-        String userid=spref.getString("userId",null);
+        //String userid=spref.getString("userId",null);
+        String userid="10002";
         if (logToken == "null") {    //其实还要判断logToken是否失效
             runOnUiThread(() -> {
                 Toast.makeText(guanzhu.this, "请先登录", Toast.LENGTH_SHORT).show();
             });
         } else{
             Retrofit retrofit = new Retrofit.Builder()
-                    .baseUrl(this.getString(R.string.ServerBaseUrl))
+                    .baseUrl(Net.BaseHost)
                     .addConverterFactory(GsonConverterFactory.create())
+                    .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                     .build();
-            addresponse.addService service=retrofit.create(addresponse.addService.class);
-            retrofit2.Call<addresponse>call=service.add(Integer.parseInt(userid),logToken);
-            call.enqueue(new Callback<addresponse>() {
+            MyResponse.addService service=retrofit.create(MyResponse.addService.class);
+            retrofit2.Call<MyResponse>call=service.add(Integer.parseInt(userid),logToken);
+            call.enqueue(new Callback<MyResponse>() {
                 @Override
-                public void onResponse(Call<addresponse> call, Response<addresponse> response) {
+                public void onResponse(Call<MyResponse> call, Response<MyResponse> response) {
                     if (response.body().getCode()==0)
                         Log.d("haoyou","添加成功");
                 }
 
                 @Override
-                public void onFailure(Call<addresponse> call, Throwable t) {
-
+                public void onFailure(Call<MyResponse> call, Throwable t) {
+                    t.printStackTrace();
                 }
             });
         }
     }
     public void deletefriend(){
+        spref=PreferenceManager.getDefaultSharedPreferences(this);
+        String logToken = spref.getString("logToken", null);
+        //String userid=spref.getString("userId",null);
+        String userid="10006";
+        if (logToken == "null") {    //其实还要判断logToken是否失效
+            runOnUiThread(() -> {
+                Toast.makeText(guanzhu.this, "请先登录", Toast.LENGTH_SHORT).show();
+            });
+        } else{
+            Retrofit retrofit = new Retrofit.Builder()
+                    .baseUrl(Net.BaseHost)
+                    .addConverterFactory(GsonConverterFactory.create())
+                    .build();
+            MyResponse.deleteService service=retrofit.create(MyResponse.deleteService.class);
+            retrofit2.Call<MyResponse>call=service.delete(Integer.parseInt(userid),logToken);
+            call.enqueue(new Callback<MyResponse>() {
+                @Override
+                public void onResponse(Call<MyResponse> call, Response<MyResponse> response) {
+                    if (response.body().getCode()==0)
+                        Log.d("haoyou","添加成功");
+                }
 
+                @Override
+                public void onFailure(Call<MyResponse> call, Throwable t) {
+
+                }
+            });
+        }
     }
+
 }

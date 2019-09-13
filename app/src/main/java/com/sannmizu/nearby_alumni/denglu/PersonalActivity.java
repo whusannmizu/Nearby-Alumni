@@ -28,9 +28,34 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
+import com.google.gson.JsonObject;
+import com.sannmizu.nearby_alumni.NetUtils.ChatResponse;
+import com.sannmizu.nearby_alumni.NetUtils.MyResponse;
+import com.sannmizu.nearby_alumni.NetUtils.Net;
+import com.sannmizu.nearby_alumni.NetUtils.infoResponse;
+import com.sannmizu.nearby_alumni.NetUtils.locateResponse;
 import com.sannmizu.nearby_alumni.R;
+import com.sannmizu.nearby_alumni.locateActivity;
+import com.sannmizu.nearby_alumni.utils.AESUtils;
+import com.sannmizu.nearby_alumni.utils.encoder.BASE64Encoder;
 
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
+
+import io.reactivex.Observer;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.schedulers.Schedulers;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
+import retrofit2.converter.gson.GsonConverterFactory;
+import io.reactivex.ObservableSource;
+import io.reactivex.functions.Function;
 
 public class PersonalActivity extends AppCompatActivity implements MyOneLineView.OnArrowClickListener{
     MyOneLineView poneitem,ptwoitem,pthreeitem,pfouritem,pfiveitem,psixitem,psevenitem,peightitem,pnightitem;
@@ -56,7 +81,6 @@ public class PersonalActivity extends AppCompatActivity implements MyOneLineView
         ptwoitem=(MyOneLineView)findViewById(R.id.ptwo_item);
         pthreeitem=(MyOneLineView)findViewById(R.id.pthree_item);
         pfouritem=(MyOneLineView)findViewById(R.id.pfour_item);
-        findViewById(R.id.pfour_item).setOnClickListener(view -> showDialog(constelltionlist,12));
         pfiveitem=(MyOneLineView)findViewById(R.id.pfive_item);
         psixitem=(MyOneLineView)findViewById(R.id.psix_item);
         psevenitem=(MyOneLineView)findViewById(R.id.pseven_item);
@@ -72,17 +96,13 @@ public class PersonalActivity extends AppCompatActivity implements MyOneLineView
         pthreeitem.initItemWidthEdit(R.drawable.ic_xingbie,"性别","请判断你的性别");
         String xingbie=spref.getString("xingbie","");
         pthreeitem.setEditContent(xingbie);
-        initData();
-        pfouritem.initItemWidthEdit(R.drawable.ic__xingzuoyuncheng,"星座","");
+        pfouritem.initItemWidthEdit(R.drawable.ic__xingzuoyuncheng,"星座","请输入你的星座");
         String xingzuo=spref.getString("xingzuo",null);
-        if (xingzuo==null)
-        {pfouritem.setEditHint("请选择你的星座");}
-        else
-        {pfouritem.setRightText(xingzuo);}
+        pfouritem.setEditContent(xingzuo);
         pfiveitem.initItemWidthEdit(R.drawable.ic_zhiye,"职业","请选择你的职业");
         String zhiye=spref.getString("zhiye","");
         pfiveitem.setEditContent(zhiye);
-        psixitem.initItemWidthEdit(R.drawable.ic_diqu,"地区","请输入你所在的地区");
+        psixitem.initItemWidthEdit(R.drawable.ic_diqu,"地区","请输入你的地区ID（6位）");
         String diqu=spref.getString("diqu","");
         psixitem.setEditContent(diqu);
         psevenitem.initItemWidthEdit(R.drawable.ic_youxiang,"邮箱","请输入你的邮箱");
@@ -169,6 +189,7 @@ public class PersonalActivity extends AppCompatActivity implements MyOneLineView
                 seditor.putString("qianming",qianming);
                 seditor.putString("imagepath",imagePath);
                 seditor.apply();
+                shangchuan();
                 finish();
                 break;
                 default:
@@ -267,5 +288,88 @@ public class PersonalActivity extends AppCompatActivity implements MyOneLineView
             cursor.close();
         }
         return path;
+    }
+
+    public void shangchuan(){
+        spref= PreferenceManager.getDefaultSharedPreferences(this);
+        String logToken = spref.getString("logToken", null);
+        String connToken = spref.getString("connToken", null);
+        String name=spref.getString("mingzi",null);
+        String age=spref.getString("nianling",null);
+        String sign=spref.getString(" qianming",null);
+        String sex=spref.getString("xingbie",null);
+        String constellation=spref.getString("xingzuo",null);
+        String career=spref.getString("zhiye",null);
+        String areaId=spref.getString("diqu",null);
+        String email=spref.getString("youxiang",null);
+        //String icon=spref.getString("imagepath",null);
+        String icon1=spref.getString("imagepath",null);
+        String icon= null;
+        try {
+            icon = getImageStr(icon1);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        JsonObject requestData=new JsonObject();
+        requestData.addProperty("name",name);
+        requestData.addProperty("sign",sign);
+        requestData.addProperty("sex",sex);
+        requestData.addProperty("icon",icon);
+        requestData.addProperty("areaId",areaId);
+        requestData.addProperty("age",age);
+        requestData.addProperty("constellation",constellation);
+        requestData.addProperty("career",career);
+        JsonObject requestRoot=new JsonObject();
+        requestRoot.add("info",requestData);
+        //requestData.addProperty("email",email);
+
+        if(logToken == "null") {    //其实还要判断logToken是否失效
+            runOnUiThread(()->{
+                Toast.makeText(PersonalActivity.this, "请先登录", Toast.LENGTH_SHORT).show();
+            });
+        } else {
+            Retrofit retrofit = new Retrofit.Builder()
+                    .baseUrl(Net.BaseHost)
+                    .addConverterFactory(GsonConverterFactory.create())
+                    .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
+                    .build();
+            MyResponse.infoService service=retrofit.create(MyResponse.infoService.class);
+            String encrypted = AESUtils.encryptFromLocal(requestRoot.toString());
+            if(encrypted == null || connToken == null) {  //其实还要判断connToken是否失效
+                runOnUiThread(()->{
+                    Toast.makeText(PersonalActivity.this, "请先建立私密链接", Toast.LENGTH_SHORT).show();
+                });
+            } else {
+                Call<MyResponse>call=service.info(encrypted,logToken,connToken);
+                call.enqueue(new Callback<MyResponse>() {
+                    @Override
+                    public void onResponse(Call<MyResponse> call, Response<MyResponse> response) {
+                        if (response.body().getCode()==0)
+                            Log.d("lianjie","连接成功");
+                    }
+
+                    @Override
+                    public void onFailure(Call<MyResponse> call, Throwable t) {
+
+                    }
+                });
+            }
+            //locateActivity.getlocate(this);
+        }
+    }
+
+    public static String getImageStr(String imgFile)throws IOException {
+        InputStream inputStream=null;
+        byte[]data=null;
+        try {
+            inputStream=new FileInputStream(imgFile);
+            data=new byte[inputStream.available()];
+            inputStream.read(data);
+            inputStream.close();
+        }catch (IOException e){
+            e.printStackTrace();
+        }
+        BASE64Encoder encoder=new BASE64Encoder();
+        return encoder.encode(data);
     }
 }

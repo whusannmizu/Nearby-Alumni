@@ -23,4 +23,5 @@
     <string name="reset_pwd_submit">确认</string>
     <string name="baseurl">https://app.cloopen.com:8883</string>
     <string name="ziliao">返回主页</string>
+    <string name="qianming">个性签名</string>
 </resources>

@@ -177,41 +177,6 @@ public class MainActivity1 extends AppCompatActivity implements MyOneLineView.On
         ActivityCollector.removeActivity(this);
     }
 
-    class LoadTask1 extends AsyncTask<Void, Void, Bitmap> {
-
-        @Override
-        protected Bitmap doInBackground(Void... params) {
-            Paint paint = new Paint();
-            paint.setAntiAlias(true);
-            paint.setFilterBitmap(true);
-            //这里是获取到原图
-            Bitmap bitmapSource = BitmapFactory.decodeResource(getResources(), R.mipmap.tupian);
-            //我通过getWidth，getHeight获取到了宽高
-            Bitmap result = Bitmap.createBitmap(bitmapSource.getWidth(), bitmapSource.getHeight(), Bitmap.Config.ARGB_8888);
-            //创建一个画布
-            Canvas canvas = new Canvas(result);
-            //通过宽高比，获取到最小的那个值
-            int min = 0;
-            if (result.getWidth() > result.getHeight()){
-                min = result.getHeight();
-            }else if (result.getWidth() < result.getHeight()){
-                min = result.getWidth();
-            }else {
-                min = result.getWidth();
-            }
-            canvas.drawCircle(400,min/2,300,paint);//先画一个圆
-            paint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.SRC_IN));//表示我下一步要取交集的地方
-            canvas.drawBitmap(bitmapSource, -100, 0, paint);//又画一个图，并且这个图是在圆形的上面，此时就是获取到交集的地方
-            return result;
-        }
-
-        @Override
-        protected void onPostExecute(Bitmap bitmap) {
-            picture.setImageBitmap(bitmap);
-        }
-    }
-
-
     @Override
     public void onArrowClick(View view) {
         switch ((int)view.getTag()){

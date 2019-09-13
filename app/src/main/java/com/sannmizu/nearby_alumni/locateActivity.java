@@ -1,10 +1,12 @@
 package com.sannmizu.nearby_alumni;
 
 import android.Manifest;
+import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.util.Log;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -18,6 +20,8 @@ import com.baidu.location.BDLocationListener;
 import com.baidu.location.LocationClient;
 import com.baidu.location.LocationClientOption;
 import com.baidu.mapapi.SDKInitializer;
+import com.sannmizu.nearby_alumni.NetUtils.MyResponse;
+import com.sannmizu.nearby_alumni.NetUtils.Net;
 import com.sannmizu.nearby_alumni.NetUtils.locateResponse;
 
 import java.util.ArrayList;
@@ -27,15 +31,20 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
+import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 public class locateActivity extends AppCompatActivity {
     public LocationClient mLocationClient;
     private SharedPreferences pref;
     private SharedPreferences.Editor editor;
+    public static locateActivity instance=null;
+
+    String latitude;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        instance=this;
         mLocationClient=new LocationClient(getApplicationContext());
         mLocationClient.registerLocationListener(new MyLocationListener());
         SDKInitializer.initialize(getApplicationContext());
@@ -131,28 +140,28 @@ public class locateActivity extends AppCompatActivity {
         super.onDestroy();
         mLocationClient.stop();
     }
-    public void getocate(){
-        pref= PreferenceManager.getDefaultSharedPreferences(this);
-        editor=pref.edit();
+    private void getlocate(Context context){
+        SharedPreferences pref;
+        SharedPreferences.Editor editor;
+        pref= PreferenceManager.getDefaultSharedPreferences(context);
         String logToken = pref.getString("logToken", "null");
+        String latitude=pref.getString("latitude","null");
+        String longitude=pref.getString("longitude","null");
         if(logToken == "null") {    //其实还要判断logToken是否失效
-            runOnUiThread(()->{
-                Toast.makeText(locateActivity.this, "请先登录", Toast.LENGTH_SHORT).show();
-            });
+                Toast.makeText(context, "请先登录", Toast.LENGTH_SHORT).show();
         } else {
             Retrofit retrofit = new Retrofit.Builder()
-                    .baseUrl(this.getString(R.string.ServerBaseUrl))
+                    .baseUrl(Net.BaseHost)
                     .addConverterFactory(GsonConverterFactory.create())
+                    .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                     .build();
-            locateResponse.locateService service=retrofit.create(locateResponse.locateService.class);
-            String latitude=pref.getString("latitude",null);
-            String longitude=pref.getString("longitude",null);
+            MyResponse.locateService service=retrofit.create(MyResponse.locateService.class);
             Call<locateResponse> call=service.locate(latitude,longitude,logToken);
             call.enqueue(new Callback<locateResponse>() {
                 @Override
                 public void onResponse(Call<locateResponse> call, Response<locateResponse> response) {
                     if(response.body().getCode()==0){
-
+                        Log.d("shangchuan","上传失败");
                     }
                     else {
 

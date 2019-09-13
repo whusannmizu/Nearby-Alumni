@@ -447,84 +447,11 @@ public class MainActivity2 extends AppCompatActivity implements View.OnClickList
 
     //QQ登录
     private void qqLogin() {
-        /*String logToken = pref.getString("logToken", "null");
-        if(logToken == "null") {    //其实还要判断logToken是否失效
-            runOnUiThread(()->{
-                Toast.makeText(MainActivity.this, "请先登录", Toast.LENGTH_SHORT).show();
-            });
-        } else {
-            Retrofit retrofit = new Retrofit.Builder()
-                    .baseUrl(this.getString(R.string.ServerBaseUrl))
-                    .addConverterFactory(GsonConverterFactory.create())
-                    .build();
-            locateResponse.locateService service=retrofit.create(locateResponse.locateService.class);
-            Call<locateResponse>call=service.locate(latitude,longitude,logToken);
-            call.enqueue(new Callback<locateResponse>() {
-                @Override
-                public void onResponse(Call<locateResponse> call, Response<locateResponse> response) {
-                    if(response.body().getCode()==0){
 
-                    }
-                    else {
-
-                    }
-                }
-
-                @Override
-                public void onFailure(Call<locateResponse> call, Throwable t) {
-
-                }
-            });
-        }*/
     }
 
     //微信登录
     private void weixinLogin() {
-       /* String logToken = pref.getString("logToken", "null");
-        String connToken = pref.getString("connToken", "null");
-        JsonObject requestData=new JsonObject();
-        requestData.addProperty("name",name);
-        requestData.addProperty("age",age);
-        requestData.addProperty("sign",sign);
-        requestData.addProperty("sex",sex);
-        requestData.addProperty("constellation",constellation);
-        requestData.addProperty("career",career);
-        requestData.addProperty("areaId",areaId);
-        requestData.addProperty("email",email);
-        requestData.addProperty("icon",icon);
-        if(logToken == "null") {    //其实还要判断logToken是否失效
-            runOnUiThread(()->{
-                Toast.makeText(MainActivity.this, "请先登录", Toast.LENGTH_SHORT).show();
-            });
-        } else {
-            Retrofit retrofit = new Retrofit.Builder()
-                    .baseUrl(this.getString(R.string.ServerBaseUrl))
-                    .addConverterFactory(GsonConverterFactory.create())
-                    .build();
-            infoResponse.infoService service=retrofit.create(infoResponse.infoService.class);
-            String encrypted = AESUtils.encryptFromLocal(requestData.toString(), MainActivity.this);
-            if(encrypted == "" || connToken == "null") {  //其实还要判断connToken是否失效
-                runOnUiThread(()->{
-                    Toast.makeText(MainActivity.this, "请先建立私密链接", Toast.LENGTH_SHORT).show();
-                });
-            } else {
-                Call<infoResponse> call = service.info(encrypted, logToken, connToken);
-                call.enqueue(new Callback<infoResponse>() {
-                    @Override
-                    public void onResponse(Call<infoResponse> call, Response<infoResponse> response) {
-                        if (response.body().getCode()==0)
-                        {
-
-                        }
-                    }
-
-                    @Override
-                    public void onFailure(Call<infoResponse> call, Throwable t) {
-
-                    }
-                });
-            }
-        }*/
     }
     public static String getImageStr(String imgFile)throws IOException{
         InputStream inputStream=null;
