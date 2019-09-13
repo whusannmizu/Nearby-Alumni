@@ -31,7 +31,7 @@ public class MainActivity extends AppCompatActivity {
         button2 = findViewById(R.id.button2);
         button3 = findViewById(R.id.button3);
         button1.setOnClickListener(v->{
-            Intent intent = new Intent(MainActivity.this, InternetDemo.class);
+            Intent intent = new Intent(MainActivity.this,MainActivity2.class);
             startActivity(intent);
         });
         button2.setOnClickListener(v->{

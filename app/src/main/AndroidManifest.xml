@@ -114,12 +114,12 @@
         </activity>
         <activity android:name=".denglu.gerenziliao"
             android:launchMode="singleTop"
-            android:theme="@style/AppTheme1"
+            android:theme="@style/AppTheme"
             android:windowSoftInputMode="adjustPan|stateHidden"
             android:label="详细资料"/>
         <activity android:name=".denglu.beizhu"
             android:launchMode="singleTop"
-            android:theme="@style/AppTheme1"
+            android:theme="@style/AppTheme"
             android:windowSoftInputMode="adjustPan|stateHidden"
             android:label="备注"/>
         <service
