@@ -5,10 +5,11 @@ import java.util.Calendar;
 import java.util.Date;
 
 public class TimeObject extends BaseObject {
+    public static final int TYPE = RecordAdapter.TimeMsg;
     private Date time;
 
     public TimeObject(Date time) {
-        super(RecordAdapter.TimeMsg);
+        super(TYPE);
         this.time = time;
     }
 

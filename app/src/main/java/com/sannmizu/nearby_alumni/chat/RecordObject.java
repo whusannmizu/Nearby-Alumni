@@ -3,11 +3,13 @@ package com.sannmizu.nearby_alumni.chat;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import com.sannmizu.nearby_alumni.Database.ChatRecord;
+import com.sannmizu.nearby_alumni.database.ChatRecord;
 
 import java.util.Date;
 
 public class RecordObject extends BaseObject implements Parcelable {
+    public static final int TYPE_SEND = RecordAdapter.SendMsg;
+    public static final int TYPE_RECEIVE = RecordAdapter.ReceiveMsg;
     private String content;
     private boolean isText;
     private Date time;

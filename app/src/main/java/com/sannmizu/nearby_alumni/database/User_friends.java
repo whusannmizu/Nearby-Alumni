@@ -1,10 +1,7 @@
-package com.sannmizu.nearby_alumni.Database;
+package com.sannmizu.nearby_alumni.database;
 
-import org.litepal.LitePal;
 import org.litepal.annotation.Column;
 import org.litepal.crud.LitePalSupport;
-
-import java.util.List;
 
 public class User_friends extends LitePalSupport {
     private int id;

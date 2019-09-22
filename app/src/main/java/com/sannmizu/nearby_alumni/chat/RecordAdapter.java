@@ -17,10 +17,11 @@ import com.sannmizu.nearby_alumni.cacheUtils.MyBitmapUtils;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.ListIterator;
 
 public class RecordAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private List<BaseObject> mRecordList;
-    private List<Integer> mWhichList = new ArrayList<>();
+    private List<Long> mWhichList = new ArrayList<>();
     public static final int SendMsg = 0;
     public static final int ReceiveMsg = 1;
     public static final int TimeMsg = 2;
@@ -102,7 +103,7 @@ public class RecordAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
                     //获得图片bitmap
                     mBitmapUtils.disPlay(((RightMsgHolder) holder).imageView, object.getContent());
                 }
-                if (mWhichList.contains(position)) {
+                if (mWhichList.contains(getTAG(position))) {
                     ((RightMsgHolder) holder).progressBar.setVisibility(View.VISIBLE);
                 } else {
                     ((RightMsgHolder) holder).progressBar.setVisibility(View.GONE);
@@ -128,7 +129,7 @@ public class RecordAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
                 }
                 if(!((LeftMsgHolder) holder).imageView.hasOnClickListeners()) {
                     ((LeftMsgHolder) holder).imageView.setOnClickListener(v->{
-
+                        //TODO:查看大图
                     });
                 }
             }
@@ -141,12 +142,29 @@ public class RecordAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
         }
     }
 
+    private Long getTAG(int position) {
+        return mRecordList.get(position).getTAG();
+    }
     @Override
     public int getItemCount() {
         return mRecordList.size();
     }
 
-    public List<Integer> getWhichList() {
+    public List<Long> getWhichList() {
         return mWhichList;
+    }
+
+    public void notifyItemChanged(Long Tag) {
+        ListIterator<BaseObject> iterator = mRecordList.listIterator();
+        int num = 0;
+        while(iterator.hasNext()) { //游标定位到结尾
+            iterator.next();
+        }
+        while(iterator.hasPrevious()) { //逆向遍历
+            if(iterator.previous().getTAG().equals(Tag)) {
+                notifyItemChanged(iterator.nextIndex());
+                break;
+            }
+        }
     }
 }

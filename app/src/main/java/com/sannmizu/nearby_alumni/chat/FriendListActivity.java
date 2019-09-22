@@ -12,8 +12,8 @@ import android.os.Bundle;
 import android.util.Log;
 import android.widget.Toast;
 
-import com.sannmizu.nearby_alumni.Database.User_friends;
-import com.sannmizu.nearby_alumni.Database.Users;
+import com.sannmizu.nearby_alumni.database.User_friends;
+import com.sannmizu.nearby_alumni.database.Users;
 import com.sannmizu.nearby_alumni.NetUtils.FriendsResponse;
 import com.sannmizu.nearby_alumni.NetUtils.User;
 import com.sannmizu.nearby_alumni.R;

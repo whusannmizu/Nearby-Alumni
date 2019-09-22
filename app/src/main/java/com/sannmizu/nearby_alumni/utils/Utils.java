@@ -27,6 +27,7 @@ public class Utils extends Util{
         data = data.replace("”","\"");
         return data;
     }
+    //TODO:放到一个单独的类中管理
     public static String getLogToken() {
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(sContext);
         return sharedPreferences.getString("logToken", "");

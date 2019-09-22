@@ -4,6 +4,7 @@
     style="@style/chat_toolbar"
     android:layout_width="match_parent"
     android:layout_height="?attr/actionBarSize"
+    android:background="@color/background_0"
     app:navigationIcon="@drawable/vector_drawable_arrow_left"
     app:popupTheme="@style/ToolbarPopupTheme">
 </androidx.appcompat.widget.Toolbar>

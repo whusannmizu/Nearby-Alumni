@@ -32,10 +32,10 @@
     	</list>
     -->
     <list>
-        <mapping class="com.sannmizu.nearby_alumni.Database.Area" />
-        <mapping class="com.sannmizu.nearby_alumni.Database.Users" />
-        <mapping class="com.sannmizu.nearby_alumni.Database.User_friends" />
-        <mapping class="com.sannmizu.nearby_alumni.Database.ChatRecord" />
+        <mapping class="com.sannmizu.nearby_alumni.database.Area" />
+        <mapping class="com.sannmizu.nearby_alumni.database.Users" />
+        <mapping class="com.sannmizu.nearby_alumni.database.User_friends" />
+        <mapping class="com.sannmizu.nearby_alumni.database.ChatRecord" />
     </list>
 
     <!--

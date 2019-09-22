@@ -1,4 +1,4 @@
-package com.sannmizu.nearby_alumni.Database.ChinaArea;
+package com.sannmizu.nearby_alumni.database.ChinaArea;
 
 public class AreaBean {
     private String code;

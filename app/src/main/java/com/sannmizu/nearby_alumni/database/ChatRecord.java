@@ -1,4 +1,4 @@
-package com.sannmizu.nearby_alumni.Database;
+package com.sannmizu.nearby_alumni.database;
 
 import android.util.Log;
 
@@ -10,6 +10,7 @@ import org.litepal.crud.LitePalSupport;
 import java.text.ParseException;
 import java.util.Date;
 import java.text.SimpleDateFormat;
+import java.util.TimeZone;
 
 public class ChatRecord extends LitePalSupport {
     private int id;
@@ -38,6 +39,7 @@ public class ChatRecord extends LitePalSupport {
         }
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         try {
+            sdf.setTimeZone(TimeZone.getTimeZone("Asia/Shanghai"));
             time = sdf.parse(chatBean.getTime());
         } catch (ParseException e) {
             Log.e("sannmizu.date", "ChatBean2ChatRecord:" + chatBean.getTime() + "|error in" + e.getErrorOffset());

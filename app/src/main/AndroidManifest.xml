@@ -47,6 +47,7 @@
         <activity android:name=".chat.FriendListActivity" />
         <activity android:name=".chat.SearchFriendActivity" />
         <activity android:name=".chat.ChatActivity" />
+
         <activity android:name=".denglu.LandingActivity"
             android:launchMode="singleTop"
             android:label="登陆"
@@ -122,6 +123,9 @@
             android:theme="@style/AppTheme"
             android:windowSoftInputMode="adjustPan|stateHidden"
             android:label="备注"/>
+=======
+
+>>>>>>> c5a5bdb178b5962baac4c64db0d663888d05c793
         <service
             android:name="com.xiaomi.push.service.XMPushService"
             android:enabled="true"

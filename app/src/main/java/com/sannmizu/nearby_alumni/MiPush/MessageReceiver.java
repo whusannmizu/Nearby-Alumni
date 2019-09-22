@@ -1,24 +1,20 @@
 package com.sannmizu.nearby_alumni.MiPush;
 
 import android.annotation.SuppressLint;
-import android.app.Application;
-import android.app.ApplicationErrorReport;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
-import android.text.TextUtils;
 import android.util.Log;
 
 import com.google.gson.Gson;
-import com.sannmizu.nearby_alumni.Database.ChatRecord;
+import com.sannmizu.nearby_alumni.database.ChatRecord;
 import com.sannmizu.nearby_alumni.MiPush.Bean.ChatBean;
-import com.sannmizu.nearby_alumni.MiPush.Bean.InfoBean;
-import com.sannmizu.nearby_alumni.chat.ChatActivity;
+import com.sannmizu.nearby_alumni.MiPush.Bean.FriendReBean;
+import com.sannmizu.nearby_alumni.chat.NewMsgBean;
 import com.sannmizu.nearby_alumni.chat.RecordObject;
-import com.sannmizu.nearby_alumni.utils.AESUtils;
-import com.sannmizu.nearby_alumni.utils.SharedPreUtils;
 import com.xiaomi.mipush.sdk.ErrorCode;
 import com.xiaomi.mipush.sdk.MiPushClient;
 import com.xiaomi.mipush.sdk.MiPushCommandMessage;
@@ -76,7 +72,15 @@ public class MessageReceiver extends PushMessageReceiver {
     public void onReceivePassThroughMessage(Context context, MiPushMessage message) {
         Log.v(NearbyApplication.TAG,
                 "onReceivePassThroughMessage is called. " + message.toString());
-
+        Gson gson = new Gson();
+        String content = message.getContent();
+        switch(message.getNotifyId()) {
+            //好友申请通知
+            case NEW_FRIEND:
+                FriendReBean request = gson.fromJson(content, FriendReBean.class);
+                //TODO:通知
+                break;
+        }
     }
 
     @Override
@@ -91,12 +95,18 @@ public class MessageReceiver extends PushMessageReceiver {
                 "onNotificationMessageArrived is called. " + message.toString());
        //解析数据
         Gson gson = new Gson();
+        String content = message.getContent();
         switch(message.getNotifyId()) {
             //新消息通知
             case NEW_MESSAGE:
-                String content = message.getContent();
                 ChatBean information = gson.fromJson(content, ChatBean.class);
                 //存进数据库
+                SharedPreferences sp = context.getSharedPreferences("currentChatList", Context.MODE_PRIVATE);
+                SharedPreferences.Editor editor = sp.edit();
+                NewMsgBean bean = new NewMsgBean(information.getData().getTime(), information.getData().getContent());
+                editor.putString(String.valueOf(information.getData().getFromId()), bean.toString());
+                editor.apply();
+
                 ChatRecord chatRecord = new ChatRecord(information.getData());
                 LitePal.initialize(context);
                 boolean b = chatRecord.save();
@@ -109,8 +119,6 @@ public class MessageReceiver extends PushMessageReceiver {
                 intent.putExtras(bundle);
                 context.sendBroadcast(intent);
                 break;
-            //好友申请通知
-            case NEW_FRIEND:
         }
     }
 

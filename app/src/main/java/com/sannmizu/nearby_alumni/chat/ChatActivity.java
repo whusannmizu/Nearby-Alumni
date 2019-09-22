@@ -16,12 +16,12 @@ import android.content.ContentUris;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.provider.DocumentsContract;
 import android.provider.MediaStore;
@@ -29,30 +29,22 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Base64;
 import android.util.Log;
-import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
-import android.widget.TextView;
 import android.widget.Toast;
 
-import com.sannmizu.nearby_alumni.Database.ChatRecord;
+import com.sannmizu.nearby_alumni.database.ChatRecord;
 import com.sannmizu.nearby_alumni.NetUtils.ChatResponse;
 import com.sannmizu.nearby_alumni.R;
 import com.sannmizu.nearby_alumni.cacheUtils.LocalCacheUtils;
-import com.sannmizu.nearby_alumni.utils.AESUtils;
 import com.sannmizu.nearby_alumni.utils.SharedPreUtils;
 import com.sannmizu.nearby_alumni.utils.Utils;
 
 import org.litepal.LitePal;
-import org.litepal.crud.callback.FindMultiCallback;
 
 import java.io.ByteArrayOutputStream;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.nio.ByteBuffer;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -170,8 +162,8 @@ public class ChatActivity extends AppCompatActivity {
             if(mEditTv.getText().length() != 0) {
                 ChatRecord chatRecord = createMessage();
                 mEditTv.getText().clear();
-                int position = showMessage(chatRecord);
-                sendMessage(chatRecord, position);
+                Long Tag = showMessage(chatRecord);
+                sendMessage(chatRecord, Tag);
             }
         });
         mSendPic.setOnClickListener(v->{
@@ -188,7 +180,7 @@ public class ChatActivity extends AppCompatActivity {
             .order("time desc").limit(10).offset(startMsg)
             .findAsync(ChatRecord.class).listen(list -> {
                 for(ChatRecord record : list) {
-                    addToRecordList(new RecordObject(record), false);
+                    addToRecordList(new RecordObject(record), false, isFirst);
                 }
                 if(list.size() < 10) {
                     mSwipeRefreshLayout.setEnabled(false);
@@ -211,14 +203,15 @@ public class ChatActivity extends AppCompatActivity {
         record.setTime(new Date(System.currentTimeMillis()));
         return record;
     }
-    private int showMessage(ChatRecord chatRecord) {
-        int position = addToRecordList(new RecordObject(chatRecord), true);
-        mRecordAdapter.getWhichList().add(position);
-        mRecordAdapter.notifyItemChanged(position);
+    private Long showMessage(ChatRecord chatRecord) {
+        RecordObject recordObject = new RecordObject(chatRecord);
+        int position = addToRecordList(recordObject, true, false);
+        Long Tag = recordObject.getTAG();
+        mRecordAdapter.getWhichList().add(Tag);
         mRecyclerView.smoothScrollToPosition(position);
-        return position;
+        return Tag;
     }
-    private void sendMessage(ChatRecord chatRecord, int position) {
+    private void sendMessage(ChatRecord chatRecord, Long Tag) {
         String sendValue = ChatResponse.getTextRequest(chatRecord.getContent());
         ChatResponse.generateService().chat(friend_id, sendValue, SharedPreUtils.getString("logToken", ""), SharedPreUtils.getString("connToken", ""))
                 .subscribeOn(Schedulers.io())
@@ -242,58 +235,71 @@ public class ChatActivity extends AppCompatActivity {
                     @Override
                     public void onError(Throwable e) {
                         e.printStackTrace();
-                        mRecordAdapter.getWhichList().remove(Integer.valueOf(position));
-                        mRecordAdapter.notifyItemChanged(position);
+                        //TODO:设置失败图标
+                        mRecordAdapter.getWhichList().remove(Tag);
+                        mRecordAdapter.notifyItemChanged(Tag);
                     }
 
                     @Override
                     public void onComplete() {
-                        mRecordAdapter.getWhichList().remove(Integer.valueOf(position));
-                        mRecordAdapter.notifyItemChanged(position);
+                        mRecordAdapter.getWhichList().remove(Tag);
+                        mRecordAdapter.notifyItemChanged(Tag);
                     }
                 });
     }
 
-    private synchronized int addToRecordList(RecordObject recordObject, boolean positive) {
+    private synchronized int addToRecordList(RecordObject recordObject, boolean positive, boolean isFirst) {
+        int position;
+        TimeObject timeObject = new TimeObject(recordObject.getTime());
         if (mChatRecordList.size() == 0) {
             mLatestTime = mEarliestTime = recordObject.getTime();
-            TimeObject timeObject = new TimeObject(mLatestTime);
             if(positive) {
                 mChatRecordList.add(timeObject);
                 mChatRecordList.add(recordObject);
+                position = mChatRecordList.size() - 1;
             } else {
                 mChatRecordList.add(0, recordObject);
                 mChatRecordList.add(0, timeObject);
+                position = 0;
             }
         } else {
             if(positive) {
                 if (mLatestTime.getTime() < recordObject.getTime().getTime() - 180000) {    //3分钟
                     mLatestTime = recordObject.getTime();
-                    TimeObject timeObject = new TimeObject(mLatestTime);
                     mChatRecordList.add(timeObject);
                     mChatRecordList.add(recordObject);
                 } else {
                     mLatestTime = recordObject.getTime();
                     mChatRecordList.add(recordObject);
                 }
+                position = mChatRecordList.size() - 1;
             } else {
                 if (mEarliestTime.getTime() > recordObject.getTime().getTime() + 180000) {    //3分钟
                     mEarliestTime = recordObject.getTime();
-                    TimeObject timeObject = new TimeObject(mEarliestTime);
                     mChatRecordList.add(0, recordObject);
                     mChatRecordList.add(0, timeObject);
                 } else {
                     mEarliestTime = recordObject.getTime();
-                    TimeObject timeObject = new TimeObject(mEarliestTime);
                     mChatRecordList.remove(0);
                     mChatRecordList.add(0, recordObject);
                     mChatRecordList.add(0, timeObject);
                 }
+                position = 0;
             }
         }
+        //存进SharedPreferences，更新聊天列表
+        if(!isFirst) {
+            flashLatestMegList(new NewMsgBean(timeObject.getFormatTime(), recordObject.getContent()));
+        }
         startMsg += 1;
-        mRecyclerView.getAdapter().notifyDataSetChanged();
-        return mChatRecordList.size() - 1;
+        mRecyclerView.getAdapter().notifyItemRangeChanged(position, mChatRecordList.size() - position);
+        return position;
+    }
+    private void flashLatestMegList(NewMsgBean bean) {
+        SharedPreferences sp = getSharedPreferences("currentChatList", MODE_PRIVATE);
+        SharedPreferences.Editor editor = sp.edit();
+        editor.putString(String.valueOf(friend_id), bean.toString());
+        editor.apply();
     }
 
     private class NewMessageReceiver extends BroadcastReceiver {
@@ -302,7 +308,7 @@ public class ChatActivity extends AppCompatActivity {
             Bundle bundle = intent.getExtras();
             try {
                 if (bundle.getInt("user_id", 0) == user_id && bundle.getInt("friend_id", 0) == friend_id) {
-                    addToRecordList(bundle.getParcelable("message"), true);
+                    addToRecordList(bundle.getParcelable("message"), true, false);
                     mRecyclerView.getAdapter().notifyDataSetChanged();
                     mRecyclerView.smoothScrollToPosition(mChatRecordList.size() - 1);
                     //TODO:改成有个气泡提示
@@ -387,8 +393,8 @@ public class ChatActivity extends AppCompatActivity {
     private void sendPicture(String imagePath) {
         Bitmap bitmap = getBitmap(imagePath);
         ChatRecord chatRecord = createMessage(imagePath);
-        int position = showMessage(chatRecord, bitmap);
-        sendMessage(chatRecord, position, bitmap);
+        Long Tag = showMessage(chatRecord, bitmap);
+        sendMessage(chatRecord, Tag, bitmap);
     }
     private Bitmap getBitmap(String imagePath) {
         if(imagePath != null) {
@@ -407,18 +413,19 @@ public class ChatActivity extends AppCompatActivity {
         chatRecord.setTime(new Date(System.currentTimeMillis()));
         return chatRecord;
     }
-    private int showMessage(ChatRecord chatRecord, Bitmap bitmap) {
+    private Long showMessage(ChatRecord chatRecord, Bitmap bitmap) {
         //存入本地
         LocalCacheUtils localCacheUtils = new LocalCacheUtils();
         localCacheUtils.setBitmapToLocal(chatRecord.getContent(), bitmap);
         //加入列表
-        int position = addToRecordList(new RecordObject(chatRecord), true);
-        mRecordAdapter.getWhichList().add(position);
-        mRecordAdapter.notifyItemChanged(position);
+        RecordObject recordObject = new RecordObject(chatRecord);
+        int position = addToRecordList(recordObject, true, false);
+        Long Tag = recordObject.getTAG();
+        mRecordAdapter.getWhichList().add(Tag);
         mRecyclerView.smoothScrollToPosition(position);
-        return position;
+        return Tag;
     }
-    private void sendMessage(ChatRecord chatRecord, int position, Bitmap bitmap) {
+    private void sendMessage(ChatRecord chatRecord, Long Tag, Bitmap bitmap) {
         String sendValue = ChatResponse.getPictureRequest("png");
         String picString = getPNGFromBitmapToString(bitmap);
         ChatResponse.generateService().chat(friend_id, sendValue, picString, Utils.getLogToken(), Utils.getConnToken())
@@ -443,14 +450,15 @@ public class ChatActivity extends AppCompatActivity {
                     @Override
                     public void onError(Throwable e) {
                         e.printStackTrace();
-                        mRecordAdapter.getWhichList().remove(Integer.valueOf(position));
-                        mRecordAdapter.notifyItemChanged(position);
+                        //TODO:设置失败图标
+                        mRecordAdapter.getWhichList().remove(Tag);
+                        mRecordAdapter.notifyItemChanged(Tag);
                     }
 
                     @Override
                     public void onComplete() {
-                        mRecordAdapter.getWhichList().remove(Integer.valueOf(position));
-                        mRecordAdapter.notifyItemChanged(position);
+                        mRecordAdapter.getWhichList().remove(Tag);
+                        mRecordAdapter.notifyItemChanged(Tag);
                     }
                 });
     }
