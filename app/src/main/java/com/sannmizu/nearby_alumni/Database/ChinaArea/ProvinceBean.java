@@ -1,8 +1,10 @@
 package com.sannmizu.nearby_alumni.Database.ChinaArea;
 
+import org.litepal.crud.LitePalSupport;
+
 import java.util.List;
 
-public class ProvinceBean {
+public class ProvinceBean{
     private String code;
     private String name;
     private List<CityBean> cityList;

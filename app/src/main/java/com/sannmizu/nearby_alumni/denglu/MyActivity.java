@@ -10,11 +10,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Canvas;
-import android.graphics.Paint;
-import android.graphics.PorterDuff;
-import android.graphics.PorterDuffXfermode;
-import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -36,7 +31,7 @@ import java.io.IOException;
 import okhttp3.Call;
 import okhttp3.Response;
 
-public class MainActivity1 extends AppCompatActivity implements MyOneLineView.OnArrowClickListener,MyOneLineView.OnRootClickListener{
+public class MyActivity extends AppCompatActivity implements MyOneLineView.OnArrowClickListener,MyOneLineView.OnRootClickListener{
  MyOneLineView oneitem,twoitem,threeitem,fouritem,soneitem;
  private SharedPreferences spref;
  private SharedPreferences.Editor seditor;
@@ -48,7 +43,7 @@ public class MainActivity1 extends AppCompatActivity implements MyOneLineView.On
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.mainactivity2);
+        setContentView(R.layout.myactivity);
         spref= PreferenceManager.getDefaultSharedPreferences(this);
         mbeijing=(LinearLayout)findViewById(R.id.mbeijing);
         oneitem=(MyOneLineView)findViewById(R.id.one_item);
@@ -120,8 +115,8 @@ public class MainActivity1 extends AppCompatActivity implements MyOneLineView.On
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        Glide.with(MainActivity1.this).load(bingpic).into(mpicture);
-                        Glide.with(MainActivity1.this).load(bingpic).into(new ViewTarget<View, GlideDrawable>(mbingmic) {
+                        Glide.with(MyActivity.this).load(bingpic).into(mpicture);
+                        Glide.with(MyActivity.this).load(bingpic).into(new ViewTarget<View, GlideDrawable>(mbingmic) {
                             @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
                             @Override
                             public void onResourceReady(GlideDrawable resource, GlideAnimation<? super GlideDrawable> glideAnimation) {
@@ -181,15 +176,15 @@ public class MainActivity1 extends AppCompatActivity implements MyOneLineView.On
     public void onArrowClick(View view) {
         switch ((int)view.getTag()){
             case 1:
-                startActivity(new Intent(MainActivity1.this,PersonalActivity.class));
+                startActivity(new Intent(MyActivity.this,PersonalActivity.class));
                 ActivityCollector.addActivity(this);
                 break;
             case 2:
-                startActivity(new Intent(MainActivity1.this,shezhiActivity.class));
+                startActivity(new Intent(MyActivity.this,shezhiActivity.class));
                 ActivityCollector.addActivity(this);
                 break;
             case 3:
-                startActivity(new Intent(MainActivity1.this,guanzhu.class));
+                startActivity(new Intent(MyActivity.this,guanzhu.class));
                 ActivityCollector.addActivity(this);
                 break;
         }
@@ -197,7 +192,7 @@ public class MainActivity1 extends AppCompatActivity implements MyOneLineView.On
     public void onRootClick(View view){
         switch ((int)view.getTag()){
             case 11:
-                startActivity(new Intent(MainActivity1.this,ceshi.class));
+                startActivity(new Intent(MyActivity.this,ceshi.class));
                 ActivityCollector.addActivity(this);
                 break;
         }
@@ -207,7 +202,7 @@ public class MainActivity1 extends AppCompatActivity implements MyOneLineView.On
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()){
             case R.id.settings:
-                startActivity(new Intent(MainActivity1.this,shezhiActivity.class));
+                startActivity(new Intent(MyActivity.this,shezhiActivity.class));
                 ActivityCollector.addActivity(this);
                 break;
                 default:

@@ -7,17 +7,10 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.util.Log;
 import android.widget.Button;
-import android.widget.Toast;
 
 import com.sannmizu.nearby_alumni.Database.LoadChinaArea;
-import com.sannmizu.nearby_alumni.MiPush.InternetDemo;
-import com.sannmizu.nearby_alumni.chat.ChatActivity;
-import com.sannmizu.nearby_alumni.chat.RecordAdapter;
-import com.sannmizu.nearby_alumni.denglu.MainActivity1;
-import com.sannmizu.nearby_alumni.denglu.MainActivity2;
-import com.xiaomi.mipush.sdk.MiPushClient;
+import com.sannmizu.nearby_alumni.denglu.LandingActivity;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -31,7 +24,7 @@ public class MainActivity extends AppCompatActivity {
         button2 = findViewById(R.id.button2);
         button3 = findViewById(R.id.button3);
         button1.setOnClickListener(v->{
-            Intent intent = new Intent(MainActivity.this,MainActivity2.class);
+            Intent intent = new Intent(MainActivity.this, LandingActivity.class);
             startActivity(intent);
         });
         button2.setOnClickListener(v->{

@@ -22,8 +22,7 @@ import com.sannmizu.nearby_alumni.NetUtils.LoginResponse;
 import com.sannmizu.nearby_alumni.NetUtils.Net;
 import com.sannmizu.nearby_alumni.NetUtils.RegisterResponse;
 import com.sannmizu.nearby_alumni.R;
-import com.sannmizu.nearby_alumni.denglu.MainActivity1;
-import com.sannmizu.nearby_alumni.denglu.guanzhu;
+import com.sannmizu.nearby_alumni.denglu.MyActivity;
 import com.sannmizu.nearby_alumni.utils.AESUtils;
 import com.sannmizu.nearby_alumni.utils.JsonConverterFactory;
 import com.sannmizu.nearby_alumni.utils.MD5Utils;
@@ -206,7 +205,7 @@ public class InternetDemo extends AppCompatActivity {
                                             editor.putString(InternetDemo.this.getString(R.string.connect_aes_iv), connectResponse.getData().getAes().getIv());
                                             editor.putString("connToken", connectResponse.getData().getToken().getValue());
                                             editor.apply();
-                                            startActivity(new Intent(InternetDemo.this, MainActivity1.class));
+                                            startActivity(new Intent(InternetDemo.this, MyActivity.class));
                                         } else {
                                             InternetDemo.logList.add("私密连接失败："+connectResponse.getReason());
                                         }

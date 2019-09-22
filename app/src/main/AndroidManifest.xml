@@ -28,8 +28,8 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <meta-data
-            android:name="com.example.myapplication3"
-            android:value="2f77a1efd798656ae49dfb88fe7a0d9d"/>
+            android:name="com.sannmizu.nearby_alumni"
+            android:value="4PpX2Cz1Dd9lW86t9mjCaDXC5nRAYvz9"/>
         <service
             android:name=".InitService"
             android:enabled="true"
@@ -47,7 +47,7 @@
         <activity android:name=".chat.FriendListActivity" />
         <activity android:name=".chat.SearchFriendActivity" />
         <activity android:name=".chat.ChatActivity" />
-        <activity android:name=".denglu.MainActivity2"
+        <activity android:name=".denglu.LandingActivity"
             android:launchMode="singleTop"
             android:label="登陆"
             android:screenOrientation="portrait"
@@ -78,7 +78,7 @@
             android:theme="@style/Account_Base.App.Theme.NoTitle"
             android:windowSoftInputMode="stateHidden|adjustResize">
         </activity>
-        <activity android:name=".denglu.MainActivity1"
+        <activity android:name=".denglu.MyActivity"
             android:launchMode="singleTop"
             android:label="我的"
             android:screenOrientation="portrait"

@@ -21,8 +21,9 @@ public class MyResponse<T> {
         Call<ConnectResponse> post(@Path("host")String path);
     }
     public static interface infoService{
+        @FormUrlEncoded
         @PUT("account/info")
-        Call<MyResponse> info(@Query("newInfo") String newInfo, @Query("logToken")String logToken, @Query("connToken")String connToken);
+        Call<MyResponse> info(@Field("newInfo") String newInfo, @Query("logToken")String logToken, @Query("connToken")String connToken);
     }
     public static interface locateService{
         @PUT("app/locate")

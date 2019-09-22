@@ -161,7 +161,30 @@ public class MyOneLineView extends LinearLayout {
         showArrow(false);
         return this;
     }
-
+    public MyOneLineView initItemWidthEdit1(int iconRes, String textContent, String editHint) {
+        init(iconRes, textContent);
+        showEdit(true);
+        setEditable(false);
+        setEditHint(editHint);
+        setTextContentSize(18);
+        setRootPaddingTopBottom(20,20);
+        setRightIconSize(30,30);
+        editContent.setCursorVisible(false);
+        showArrow(true);
+        return this;
+    }
+    public MyOneLineView initItemWidthEdit2(int iconRes, String textContent, String editHint) {
+        init(iconRes, textContent);
+        showEdit(true);
+        setEditable(false);
+        setEditHint(editHint);
+        setTextContentSize(18);
+        setRootPaddingTopBottom(20,20);
+        setRightIconSize(30,30);
+        editContent.setCursorVisible(false);
+        showArrow(false);
+        return this;
+    }
     //---------------------下面是对每个部分的一些设置     上面是应用中常用场景封装-----------------------//
 
     /**

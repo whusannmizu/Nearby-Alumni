@@ -7,6 +7,7 @@ import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -14,6 +15,7 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -23,7 +25,13 @@ import com.sannmizu.nearby_alumni.NetUtils.MyResponse;
 import com.sannmizu.nearby_alumni.NetUtils.Net;
 import com.sannmizu.nearby_alumni.NetUtils.addresponse;
 import com.sannmizu.nearby_alumni.NetUtils.friendResponse;
+import com.sannmizu.nearby_alumni.NetUtils.infoResponse;
 import com.sannmizu.nearby_alumni.R;
+import com.sannmizu.nearby_alumni.utils.encoder.BASE64Decoder;
+
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -40,6 +48,10 @@ public class guanzhu extends AppCompatActivity implements View.OnClickListener,M
     private ScrollView scrollView;
     private TextView gtext1,gtext2,gt1,gt2;
     private Button gbutton1,gbutton2;
+    String name,age,sign,sex,constellation,career,areaId,icon1,icon,id;
+    /*Intent intent=getIntent();
+    String userid=intent.getStringExtra("userid");*/
+    int userid=10007;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -53,6 +65,7 @@ public class guanzhu extends AppCompatActivity implements View.OnClickListener,M
         gbutton2.setOnClickListener(this);
         gbutton1.setText("发消息");
         //gbutton2.setText("添加好友");
+        getdata();
         juge();
         spref= PreferenceManager.getDefaultSharedPreferences(this);
         gone=findViewById(R.id.gone);
@@ -68,18 +81,18 @@ public class guanzhu extends AppCompatActivity implements View.OnClickListener,M
         gt1=findViewById(R.id.gt1);
         gt1.setText(R.string.qianming);
         gt2=findViewById(R.id.gt2);
-        String text3=spref.getString("qianming",null);
-        if (text3!=null)
-            gt2.setText(text3);
+        //String text3=spref.getString("qianming",null);
+        if (sign!=null)
+            gt2.setText(sign);
         String text1=spref.getString("note",null);
         if (text1!=null)
         {
             gtext1.setText(text1);
         }
-        String text2=spref.getString("diqu",null);
-        if (text2!=null)
+        //String text2=spref.getString("diqu",null);
+        if (areaId!=null)
         {
-            gtext2.setText(text2);
+            gtext2.setText(areaId);
         }
         Toolbar toolbar=(Toolbar)findViewById(R.id.gtoolbar);
         setSupportActionBar(toolbar);
@@ -106,9 +119,20 @@ public class guanzhu extends AppCompatActivity implements View.OnClickListener,M
         switch ((int)view.getTag()){
             case 1:
                 startActivity(new Intent(guanzhu.this,beizhu.class));
+                ActivityCollector.addActivity(this);
                 break;
             case 2:
+                seditor=spref.edit();
+                seditor.putString("puserid",id);
+                seditor.putString("pnianling",age);
+                seditor.putString("pxingbie",sex);
+                seditor.putString("pnicheng",name);
+                seditor.putString("pxingzuo",constellation);
+                seditor.putString("pzhiye",career);
+                seditor.putString("pdiqu",areaId);
+                seditor.apply();
                 startActivity(new Intent(guanzhu.this,gerenziliao.class));
+                ActivityCollector.addActivity(this);
                 break;
         }
     }
@@ -129,11 +153,61 @@ public class guanzhu extends AppCompatActivity implements View.OnClickListener,M
                 break;
         }
     }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        switch (item.getItemId()){
+            case android.R.id.home:
+                finish();
+                ActivityCollector.removeActivity(this);
+                break;
+        }
+        return true;
+    }
+
+    public void getdata(){
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(Net.BaseHost)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+        infoResponse.infoService service=retrofit.create(infoResponse.infoService.class);
+        retrofit2.Call<infoResponse>call=service.info(userid);
+        call.enqueue(new Callback<infoResponse>() {
+            @Override
+            public void onResponse(Call<infoResponse> call, Response<infoResponse> response) {
+                if (response.body().getCode()==0) {
+                    id= String.valueOf(response.body().getData().getId());
+                    name = response.body().getData().getInfo().getNickname();
+                    age = String.valueOf(response.body().getData().getInfo().getAge());
+                    sign = response.body().getData().getInfo().getSign();
+                    sex = response.body().getData().getInfo().getSex();
+                    constellation = response.body().getData().getInfo().getConstellation();
+                    career = response.body().getData().getInfo().getCareer();
+                    areaId = String.valueOf(response.body().getData().getInfo().getArea_id());
+                    icon1 = response.body().getData().getInfo().getIcon_base64();
+                    gt2.setText(sign);
+                    /*try {
+                        generateImage(icon1,icon);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }*/
+                }
+                else {
+
+                }
+            }
+
+            @Override
+            public void onFailure(Call<infoResponse> call, Throwable t) {
+                t.printStackTrace();
+            }
+        });
+    }
     public void juge(){
         spref=PreferenceManager.getDefaultSharedPreferences(this);
         String logToken = spref.getString("logToken", null);
         //String userid=spref.getString("userId",null);
-        String userid = "10007";
+        int userid = 10007;
         if (logToken == "null") {    //其实还要判断logToken是否失效
             runOnUiThread(() -> {
                 Toast.makeText(guanzhu.this, "请先登录", Toast.LENGTH_SHORT).show();
@@ -152,14 +226,11 @@ public class guanzhu extends AppCompatActivity implements View.OnClickListener,M
                     //gbutton2.setText("连接成功");
                     if (response.body().getCode()==0)
                     {
-                        /*if (userid==response.body().getData().getFriends().get(1).getId())
-                        {
-                            gbutton2.setText("删除好友");
+                        for(int i=0;i<response.body().getData().getFriends().size();i++) {
+                            int m = response.body().getData().getFriends().get(i).getId();
+                            if (userid != m)
+                                gbutton2.setText("添加好友");
                         }
-                        else
-                        {
-                            gbutton2.setText("添加好友");
-                        }*/
                         gbutton2.setText("添加好友");
                     }
                     else
@@ -168,7 +239,7 @@ public class guanzhu extends AppCompatActivity implements View.OnClickListener,M
 
                 @Override
                 public void onFailure(retrofit2.Call<friendResponse> call, Throwable t) {
-
+                    t.printStackTrace();
                 }
             });
         }
@@ -233,6 +304,24 @@ public class guanzhu extends AppCompatActivity implements View.OnClickListener,M
                 }
             });
         }
+    }
+    public static boolean generateImage(String imgStr,String path)throws IOException {
+        if (imgStr==null){
+            return false;
+        }
+        BASE64Decoder decoder=new BASE64Decoder();
+        byte[] b=decoder.decodeBuffer(imgStr);
+
+        for (int i=0;i<b.length;i++){
+            if (b[i]<0){
+                b[i]+=256;
+            }
+        }
+        OutputStream out=new FileOutputStream(path);
+        out.write(b);
+        out.flush();
+        out.close();
+        return true;
     }
 
 }

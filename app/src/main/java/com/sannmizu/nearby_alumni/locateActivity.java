@@ -40,7 +40,7 @@ public class locateActivity extends AppCompatActivity {
     private SharedPreferences.Editor editor;
     public static locateActivity instance=null;
 
-    String latitude;
+    String latitude,longitude;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -108,11 +108,11 @@ public class locateActivity extends AppCompatActivity {
                     StringBuilder currentPosition=new StringBuilder();
                     pref=PreferenceManager.getDefaultSharedPreferences(locateActivity.this);
                     currentPosition.append("纬度：").append(bdLocation.getLatitude()).append("\n");
-                    String latitude= String.valueOf(bdLocation.getLatitude());
+                    latitude= String.valueOf(bdLocation.getLatitude());
                     editor=pref.edit();
                     editor.putString("latitude",latitude);
                     currentPosition.append("经线：").append(bdLocation.getLongitude()).append("\n");
-                    String longitude= String.valueOf(bdLocation.getLongitude());
+                    longitude= String.valueOf(bdLocation.getLongitude());
                     editor.putString("longitude",longitude);
                     editor.apply();
                     currentPosition.append("国家:").append(bdLocation.getCountry()).append("\n");
@@ -140,15 +140,15 @@ public class locateActivity extends AppCompatActivity {
         super.onDestroy();
         mLocationClient.stop();
     }
-    private void getlocate(Context context){
+    public void getlocate(){
         SharedPreferences pref;
         SharedPreferences.Editor editor;
-        pref= PreferenceManager.getDefaultSharedPreferences(context);
+        pref= PreferenceManager.getDefaultSharedPreferences(this);
         String logToken = pref.getString("logToken", "null");
-        String latitude=pref.getString("latitude","null");
-        String longitude=pref.getString("longitude","null");
+        //String latitude=pref.getString("latitude","null");
+        //String longitude=pref.getString("longitude","null");
         if(logToken == "null") {    //其实还要判断logToken是否失效
-                Toast.makeText(context, "请先登录", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "请先登录", Toast.LENGTH_SHORT).show();
         } else {
             Retrofit retrofit = new Retrofit.Builder()
                     .baseUrl(Net.BaseHost)
@@ -161,16 +161,16 @@ public class locateActivity extends AppCompatActivity {
                 @Override
                 public void onResponse(Call<locateResponse> call, Response<locateResponse> response) {
                     if(response.body().getCode()==0){
-                        Log.d("shangchuan","上传失败");
+                        Log.d("shangchuan","上传成功");
                     }
                     else {
-
+                        Log.d("shangchuan","上传失败");
                     }
                 }
 
                 @Override
                 public void onFailure(Call<locateResponse> call, Throwable t) {
-
+                    t.printStackTrace();
                 }
             });
         }

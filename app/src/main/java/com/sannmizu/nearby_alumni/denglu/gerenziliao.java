@@ -39,27 +39,35 @@ public class gerenziliao extends AppCompatActivity {
         ziliao6=findViewById(R.id.ziliao6);
         ziliao7=findViewById(R.id.ziliao7);
         spref=PreferenceManager.getDefaultSharedPreferences(this);
-        String name=spref.getString("xingming","");
-        ziliao1.initMine(R.drawable.ic_xingming,"姓名",name,false);
-        String age=spref.getString("nianling","");
-        ziliao2.initMine(R.drawable.ic_nianling,"年龄",age,false);
-        String sex=spref.getString("xingbie","");
-        ziliao3.initMine(R.drawable.ic_xingbie,"性别",sex,false);
-        String nickname=spref.getString("nicheng","");
-        ziliao4.initMine(R.drawable.ic_nicheng2,"昵称",nickname,false);
-        String collection=spref.getString("xingzuo","");
-        ziliao5.initMine(R.drawable.ic__xingzuoyuncheng,"星座",collection,false);
-        String career=spref.getString("zhiye","");
-        ziliao6.initMine(R.drawable.ic_zhiye,"职业",career,false);
-        String area=spref.getString("diqu","");
-        ziliao7.initMine(R.drawable.ic_diqu,"地区",area,false);
+        String name=spref.getString("puserid","");
+        ziliao1.initItemWidthEdit2(R.drawable.ic_xingming,"用户id","");
+        ziliao1.setEditContent(name);
+        String age=spref.getString("pnianling","");
+        ziliao2.initItemWidthEdit2(R.drawable.ic_nianling,"年龄","");
+        ziliao2.setEditContent(age);
+        String sex=spref.getString("pxingbie","");
+        ziliao3.initItemWidthEdit2(R.drawable.ic_xingbie,"性别","");
+        ziliao3.setEditContent(sex);
+        String nickname=spref.getString("pnicheng","");
+        ziliao4.initItemWidthEdit2(R.drawable.ic_nicheng2,"昵称","");
+        ziliao4.setEditContent(nickname);
+        String collection=spref.getString("pxingzuo","");
+        ziliao5.initItemWidthEdit2(R.drawable.ic__xingzuoyuncheng,"星座","");
+        ziliao5.setEditContent(collection);
+        String career=spref.getString("pzhiye","");
+        ziliao6.initItemWidthEdit2(R.drawable.ic_zhiye,"职业","");
+        ziliao6.setEditContent(career);
+        String area=spref.getString("pdiqu","");
+        ziliao7.initItemWidthEdit2(R.drawable.ic_diqu,"地区","");
+        ziliao7.setEditContent(area);
     }
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.home:
+            case android.R.id.home:
                 finish();
+                ActivityCollector.removeActivity(this);
                 break;
         }
         return true;

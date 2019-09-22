@@ -2,34 +2,72 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical" android:layout_width="match_parent"
+    android:background="@color/background_1"
     android:layout_height="match_parent">
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/btoolbar"
+        app:titleTextColor="@color/black"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
-        android:background="@drawable/title_bar"
-        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+        android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
         app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
         app:layout_scrollFlags="scroll|enterAlways|snap">
     </androidx.appcompat.widget.Toolbar>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="20dp">
     <TextView
         android:id="@+id/btext1"
+        android:textColor="@color/black"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="备注名"
-        android:textSize="16sp"/>
+        android:textSize="18sp"/>
+    </LinearLayout>
+    <Space
+        android:layout_width="match_parent"
+        android:layout_height="10dp" />
+    <LinearLayout
+        android:background="@color/white"
+        android:layout_width="match_parent"
+        android:layout_height="40dp">
     <EditText
         android:id="@+id/bedit1"
         android:layout_width="match_parent"
-        android:layout_height="20dp" />
+        android:layout_height="match_parent"
+        android:hint="备注"
+        android:background="@null"
+        android:textCursorDrawable="@null"
+        android:textSize="18sp" />
+    </LinearLayout>
+    <Space
+        android:layout_width="match_parent"
+        android:layout_height="10dp" />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="20dp">
     <TextView
         android:id="@+id/btext2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="描述"
-        android:textSize="16sp"/>
+        android:textColor="@color/black"
+        android:textSize="18sp"/>
+    </LinearLayout>
+    <Space
+        android:layout_width="match_parent"
+        android:layout_height="10dp" />
+    <LinearLayout
+        android:background="@color/white"
+        android:layout_width="match_parent"
+        android:layout_height="40dp">
     <EditText
         android:id="@+id/bedit2"
         android:layout_width="match_parent"
-        android:layout_height="20dp" />
+        android:layout_height="match_parent"
+        android:hint="描述"
+        android:background="@null"
+        android:textCursorDrawable="@null"
+        android:textSize="18sp" />
+    </LinearLayout>
 </LinearLayout>

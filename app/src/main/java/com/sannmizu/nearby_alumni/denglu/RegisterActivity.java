@@ -12,22 +12,15 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
-import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.google.gson.JsonObject;
-import com.sannmizu.nearby_alumni.MainActivity;
 import com.sannmizu.nearby_alumni.NetUtils.Net;
 import com.sannmizu.nearby_alumni.NetUtils.RegisterResponse;
 import com.sannmizu.nearby_alumni.R;
-import com.sannmizu.nearby_alumni.utils.MD5Utils;
-import com.sannmizu.nearby_alumni.utils.RSAUtils;
 
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Random;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.concurrent.CopyOnWriteArrayList;
@@ -163,6 +156,7 @@ private void initView(){
                                         editor=pref.edit();
                                         editor.putString("password",pwd);
                                         editor.putString("account", String.valueOf(registerResponse.getData().getUser_id()));
+                                        editor.putString("userid",String.valueOf(registerResponse.getData().getUser_id()));
                                         editor.apply();
                                     } else {
                                         logList.add("注册失败，原因：" + registerResponse.getReason());
@@ -187,7 +181,7 @@ private void initView(){
             AllLog = AllLog + log + "\n\n";
             Log.d("reg",log);
         }
-        startActivity(new Intent(RegisterActivity.this, MainActivity2.class));
+        startActivity(new Intent(RegisterActivity.this, LandingActivity.class));
     }
 
      /*public void SendCode() throws IOException {

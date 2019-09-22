@@ -27,7 +27,8 @@ public class WheelView extends ScrollView {
     public static class OnWheelViewListener {
         public void onSelected(int selectedIndex, String item) {
 
-        }    }
+        }
+    }
         private Context context;
         private LinearLayout views;
         public WheelView(Context context) {
@@ -40,18 +41,23 @@ public class WheelView extends ScrollView {
         }
         public WheelView(Context context, AttributeSet attrs, int defStyle) {
             super(context, attrs, defStyle);
-            init(context);    }
-            List<String> items;
+            init(context);
+        }
+        List<String> items;
+
         private List<String> getItems() {
-            return items;    }
-            public void setItems(List<String> list) {
+            return items;
+        }
+
+        public void setItems(List<String> list) {
             if (null == items) {
                 items = new ArrayList<String>();
             }
             items.clear();
             items.addAll(list);
             // 前面和后面补全
-                for (int i = 0; i < offset; i++) {
+
+            for (int i = 0; i < offset; i++) {
                     items.add(0, "");
                     items.add("");
                 }
@@ -202,11 +208,12 @@ public class WheelView extends ScrollView {
         private int scrollDirection = -1;
         private static final int SCROLL_DIRECTION_UP = 0;
         private static final int SCROLL_DIRECTION_DOWN = 1;
-        Paint paint;    int viewWidth;
+        Paint paint;
+        int viewWidth;
         @Override
         public void setBackgroundDrawable(Drawable background) {
-            if (viewWidth == 0) {//
-                viewWidth = ((Activity) context).getWindowManager().getDefaultDisplay().getWidth();
+            if (viewWidth == 0) {
+                //viewWidth = ((Activity) context).getWindowManager().getDefaultDisplay().getWidth();
                 viewWidth = views.getWidth();
                 Log.d(TAG, "viewWidth: " + viewWidth);
             }
@@ -240,7 +247,8 @@ public class WheelView extends ScrollView {
         protected void onSizeChanged(int w, int h, int oldw, int oldh) {
             super.onSizeChanged(w, h, oldw, oldh);
             Log.d(TAG, "w: " + w + ", h: " + h + ", oldw: " + oldw + ", oldh: " + oldh);
-            viewWidth = w;        setBackgroundDrawable(null);
+            viewWidth = w;
+            setBackgroundDrawable(null);
         }     /**     * 选中回调     */
         private void onSeletedCallBack() {
             if (null != onWheelViewListener) {

@@ -2,9 +2,6 @@ package com.sannmizu.nearby_alumni.denglu;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.animation.Animator;
-import android.animation.AnimatorListenerAdapter;
-import android.animation.ValueAnimator;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -23,8 +20,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.gson.JsonObject;
-import com.sannmizu.nearby_alumni.MainActivity;
-import com.sannmizu.nearby_alumni.MiPush.InternetDemo;
 import com.sannmizu.nearby_alumni.MiPush.NearbyApplication;
 import com.sannmizu.nearby_alumni.NetUtils.ConnectResponse;
 import com.sannmizu.nearby_alumni.NetUtils.LoginResponse;
@@ -52,12 +47,11 @@ import io.reactivex.Observer;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Function;
 import io.reactivex.schedulers.Schedulers;
-import retrofit2.Call;
 import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-public class MainActivity2 extends AppCompatActivity implements View.OnClickListener,View.OnFocusChangeListener,TextWatcher {
+public class LandingActivity extends AppCompatActivity implements View.OnClickListener,View.OnFocusChangeListener,TextWatcher {
     private ImageButton back;
     private LinearLayout loginpull;
     private View loginlayer;
@@ -81,7 +75,7 @@ public class MainActivity2 extends AppCompatActivity implements View.OnClickList
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main2);
+        setContentView(R.layout.landingactivity);
         initView();
         pref = PreferenceManager.getDefaultSharedPreferences(this);
         remeberpass = (CheckBox) findViewById(R.id.cb_remember_login);
@@ -97,9 +91,6 @@ public class MainActivity2 extends AppCompatActivity implements View.OnClickList
 
     //初始化视图
     private void initView() {
-        loginlayer = findViewById(R.id.ll_login_layer);
-        loginpull = findViewById(R.id.ll_login_pull);
-        loginoptions = findViewById(R.id.ll_login_options);
         //导航栏和返回键
         backbar = findViewById(R.id.ly_retrieve_bar);
         back = findViewById(R.id.ib_navigation_back);
@@ -125,12 +116,6 @@ public class MainActivity2 extends AppCompatActivity implements View.OnClickList
         mRegister.setOnClickListener(this);
         mrloginPwd.setOnClickListener(this);
         mloginPwd.setOnClickListener(this);
-        loginpull.setOnClickListener(this);
-
-
-        findViewById(R.id.ib_login_weibo).setOnClickListener(this);
-        findViewById(R.id.ib_login_qq).setOnClickListener(this);
-        findViewById(R.id.ib_login_wx).setOnClickListener(this);
 
         mrloginusername.addTextChangedListener(this);
         mrloginPwd.addTextChangedListener(this);
@@ -188,106 +173,16 @@ public class MainActivity2 extends AppCompatActivity implements View.OnClickList
             case R.id.bt_login_register:
                 //注册
                 // startActivity(new Intent(MainActivity.this, RegisterActivity.class));
-                Intent intent = new Intent(MainActivity2.this, RegisterActivity.class);
+                Intent intent = new Intent(LandingActivity.this, RegisterActivity.class);
                 startActivity(intent);
                 break;
             case R.id.tv_login_forget_pwd:
                 //忘记密码
-                startActivity(new Intent(MainActivity2.this, ForgetPwdActivity.class));
-                break;
-            case R.id.ll_login_layer:
-            case R.id.ll_login_pull:
-                loginpull.animate().cancel();
-                loginlayer.animate().cancel();
-
-                int height = loginoptions.getHeight();
-                float progress = (loginlayer.getTag() != null && loginlayer.getTag() instanceof Float) ? (float) loginlayer.getTag() : 1;
-                int time = (int) (360 * progress);
-
-                if (loginpull.getTag() != null) {
-                    loginpull.setTag(null);
-                    glide(height, progress, time);
-                } else {
-                    loginpull.setTag(true);
-                    upGlide(height, progress, time);
-                }
-                break;
-            case R.id.ib_login_weibo:
-                weiboLogin();
-                break;
-            case R.id.ib_login_qq:
-                qqLogin();
-                break;
-            case R.id.ib_login_wx:
-                weixinLogin();
+                startActivity(new Intent(LandingActivity.this, ForgetPwdActivity.class));
                 break;
             default:
                 break;
         }
-    }
-
-    private void glide(int height, float progress, int time) {
-        loginpull.animate()
-                .translationYBy(height - height * progress)
-                .translationY(height)
-                .setDuration(time)
-                .start();
-
-        loginlayer.animate()
-                .alphaBy(1 * progress)
-                .alpha(0)
-                .setDuration(time)
-                .setListener(new AnimatorListenerAdapter() {
-
-                    @Override
-                    public void onAnimationCancel(Animator animation) {
-                        if (animation instanceof ValueAnimator) {
-                            loginlayer.setTag(((ValueAnimator) animation).getAnimatedValue());
-                        }
-                    }
-
-                    @Override
-                    public void onAnimationEnd(Animator animation) {
-                        if (animation instanceof ValueAnimator) {
-                            loginlayer.setTag(((ValueAnimator) animation).getAnimatedValue());
-                        }
-                        loginlayer.setVisibility(View.GONE);
-                    }
-                })
-                .start();
-    }
-
-    private void upGlide(int height, float progress, int time) {
-        loginpull.animate()
-                .translationYBy(height * progress)
-                .translationY(0)
-                .setDuration(time)
-                .start();
-        loginlayer.animate()
-                .alphaBy(1 - progress)
-                .alpha(1)
-                .setDuration(time)
-                .setListener(new AnimatorListenerAdapter() {
-                    @Override
-                    public void onAnimationStart(Animator animation) {
-                        loginlayer.setVisibility(View.VISIBLE);
-                    }
-
-                    @Override
-                    public void onAnimationCancel(Animator animation) {
-                        if (animation instanceof ValueAnimator) {
-                            loginlayer.setTag(((ValueAnimator) animation).getAnimatedValue());
-                        }
-                    }
-
-                    @Override
-                    public void onAnimationEnd(Animator animation) {
-                        if (animation instanceof ValueAnimator) {
-                            loginlayer.setTag(((ValueAnimator) animation).getAnimatedValue());
-                        }
-                    }
-                })
-                .start();
     }
 
     //用户名密码焦点改变
@@ -367,7 +262,7 @@ public class MainActivity2 extends AppCompatActivity implements View.OnClickList
                 .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                 .build();
         LoginResponse.LoginService service1 = retrofit.create(LoginResponse.LoginService.class);
-        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(MainActivity2.this);
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(LandingActivity.this);
         final SharedPreferences.Editor editor = sharedPreferences.edit();
         service1.login(RSAUtils.encrypt(requestRoot.toString()))
                 .subscribeOn(Schedulers.io())
@@ -385,21 +280,21 @@ public class MainActivity2 extends AppCompatActivity implements View.OnClickList
                         editor.putString("expire_time",expire_time);
                         editor.putString("logToken", loginResponse.getData().getLogToken());
                         editor.apply();
-                        MainActivity2.logList.add("登录成功：id："+id);
+                        LandingActivity.logList.add("登录成功：id："+id);
                         //建议登陆之后马上与服务器建立私密链接
                         String info = "随便写";
                         //这个密钥用来解密服务器返回的数据
                         String key = Utils.getRandomString(16);
                         String iv = Utils.getRandomString(16);
                         //马上存入数据库
-                        editor.putString(MainActivity2.this.getString(R.string.connect_aes_key), key);
-                        editor.putString(MainActivity2.this.getString(R.string.connect_aes_iv), iv);
+                        editor.putString(LandingActivity.this.getString(R.string.connect_aes_key), key);
+                        editor.putString(LandingActivity.this.getString(R.string.connect_aes_iv), iv);
                         editor.apply();
                         String requestStr = "{\"info\":\"" + info + "\", \"key\":\"" + key + "\", \"iv\":\"" + iv + "\", \"sign\":\"" + MD5Utils.md5(info + key + iv) + "\"}";
 
                         Retrofit retrofit = new Retrofit.Builder()
                                 .baseUrl(Net.BaseHost)
-                                .addConverterFactory(JsonConverterFactory.create(MainActivity2.this)) //要传入一个Context
+                                .addConverterFactory(JsonConverterFactory.create(LandingActivity.this)) //要传入一个Context
                                 .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                                 .build();
                         ConnectResponse.ConnectService service = retrofit.create(ConnectResponse.ConnectService.class);
@@ -415,21 +310,21 @@ public class MainActivity2 extends AppCompatActivity implements View.OnClickList
                     @Override
                     public void onNext(ConnectResponse connectResponse) {
                         if(connectResponse.getCode() == 0) {
-                            MainActivity2.logList.add("私密连接成功");
+                            LandingActivity.logList.add("私密连接成功");
                             Log.d("MainActivity","私密连接成功");
-                            editor.putString(MainActivity2.this.getString(R.string.connect_aes_key), connectResponse.getData().getAes().getKey());
-                            editor.putString(MainActivity2.this.getString(R.string.connect_aes_iv), connectResponse.getData().getAes().getIv());
+                            editor.putString(LandingActivity.this.getString(R.string.connect_aes_key), connectResponse.getData().getAes().getKey());
+                            editor.putString(LandingActivity.this.getString(R.string.connect_aes_iv), connectResponse.getData().getAes().getIv());
                             editor.putString("connToken", connectResponse.getData().getToken().getValue());
                             editor.apply();
-                            startActivity(new Intent(MainActivity2.this,MainActivity1.class));
+                            startActivity(new Intent(LandingActivity.this, MyActivity.class));
                         } else {
-                            MainActivity2.logList.add("私密连接失败："+connectResponse.getReason());
+                            LandingActivity.logList.add("私密连接失败："+connectResponse.getReason());
                         }
                     }
 
                     @Override
                     public void onError(Throwable e) {
-                        MainActivity2.logList.add("登录失败："+e.getMessage());
+                        LandingActivity.logList.add("登录失败："+e.getMessage());
                         NearbyApplication.getHandler().sendEmptyMessage(1);
                     }
 
@@ -440,19 +335,6 @@ public class MainActivity2 extends AppCompatActivity implements View.OnClickList
                 });
     }
 
-    //微博登录
-    private void weiboLogin() {
-
-    }
-
-    //QQ登录
-    private void qqLogin() {
-
-    }
-
-    //微信登录
-    private void weixinLogin() {
-    }
     public static String getImageStr(String imgFile)throws IOException{
         InputStream inputStream=null;
         byte[]data=null;
@@ -481,43 +363,4 @@ public class MainActivity2 extends AppCompatActivity implements View.OnClickList
         out.close();
         return true;
     }
-
-   /* public void friend() {
-        String logToken = pref.getString("logToken", null);
-        if (logToken == "null") {    //其实还要判断logToken是否失效
-            runOnUiThread(() -> {
-                Toast.makeText(MainActivity.this, "请先登录", Toast.LENGTH_SHORT).show();
-            });
-        } else {
-            Retrofit retrofit = new Retrofit.Builder()
-                    .baseUrl(this.getString(R.string.ServerBaseUrl))
-                    .addConverterFactory(GsonConverterFactory.create())
-                    .build();
-            friendResponse.friendService service=retrofit.create(friendResponse.friendService.class);
-            retrofit2.Call<friendResponse>call=service.friend(logToken);
-            call.enqueue(new retrofit2.Callback<friendResponse>() {
-                @Override
-                public void onResponse(retrofit2.Call<friendResponse> call, retrofit2.Response<friendResponse> response) {
-                    if (response.body().getCode()==0)
-                    {
-                        if (userid==response.body().getData().getFriendlist().get(1).getUserId())
-                        {
-                            boolean juge=true;
-                        }
-                        else
-                        {
-                            boolean juge=true;
-                        }
-
-                    }
-                }
-
-                @Override
-                public void onFailure(retrofit2.Call<friendResponse> call, Throwable t) {
-
-                }
-            });
-        }
-    }
-    */
 }
