@@ -20,7 +20,6 @@ public class UserListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     public static final int TYPE_HEAD = 0;
     public static final int TYPE_CHAT = 1;
     public static final int TYPE_USER = 2;
-
     public UserListAdapter(List<BaseObject> mChatList) {
         this.mChatList = mChatList;
     }
@@ -37,11 +36,13 @@ public class UserListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         ImageView chatImage;
         TextView chatName;
         TextView chatText;
+        TextView chatTime;
         public ChatHolder(@NonNull View itemView) {
             super(itemView);
             chatImage = itemView.findViewById(R.id.piece_icon);
             chatName = itemView.findViewById(R.id.piece_name);
             chatText = itemView.findViewById(R.id.piece_text);
+            chatTime = itemView.findViewById(R.id.piece_time);
         }
     }
 
@@ -75,6 +76,7 @@ public class UserListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                 ChatObject chat = (ChatObject) object;
                 ((ChatHolder)holder).chatName.setText(chat.getName());
                 ((ChatHolder)holder).chatText.setText(chat.getText());
+                ((ChatHolder)holder).chatTime.setText(chat.getTime());
                 ((ChatHolder)holder).chatImage.setImageResource(R.drawable.vector_drawable_default);
                 if(!holder.itemView.hasOnClickListeners()) {
                     holder.itemView.setOnClickListener(v -> {

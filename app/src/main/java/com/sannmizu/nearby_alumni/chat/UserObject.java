@@ -4,16 +4,17 @@ package com.sannmizu.nearby_alumni.chat;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 
-import com.sannmizu.nearby_alumni.Database.Users;
+import com.sannmizu.nearby_alumni.database.Users;
 
 public class UserObject extends BaseObject{
+    public static final int TYPE = UserListAdapter.TYPE_USER;
     private int id = 0;
     private String name = null;
     private Bitmap icon = null;
     private String sign = null;
 
     public UserObject(String name, Bitmap icon, int id, String sign) {
-        super(UserListAdapter.TYPE_USER);
+        super(TYPE);
         this.id = id;
         this.name = name;
         this.icon = icon;
@@ -25,7 +26,7 @@ public class UserObject extends BaseObject{
     }
 
     public UserObject(Users user) {
-        super(UserListAdapter.TYPE_USER);
+        super(TYPE);
         this.id = user.getUser_id();
         this.name = user.getNickname();
         this.sign = user.getSign();

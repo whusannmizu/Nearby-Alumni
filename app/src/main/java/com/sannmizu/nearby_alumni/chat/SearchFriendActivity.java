@@ -2,6 +2,7 @@ package com.sannmizu.nearby_alumni.chat;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatImageView;
+import androidx.appcompat.widget.AppCompatTextView;
 import androidx.appcompat.widget.SearchView;
 import androidx.appcompat.widget.Toolbar;
 import androidx.constraintlayout.widget.ConstraintLayout;
@@ -16,12 +17,15 @@ import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
-import com.sannmizu.nearby_alumni.Database.Users;
+import com.sannmizu.nearby_alumni.database.Users;
 import com.sannmizu.nearby_alumni.NetUtils.MyResponse;
+import com.sannmizu.nearby_alumni.NetUtils.RequestsResponse;
 import com.sannmizu.nearby_alumni.NetUtils.User;
 import com.sannmizu.nearby_alumni.NetUtils.UserSearchResponse;
 import com.sannmizu.nearby_alumni.R;
+import com.sannmizu.nearby_alumni.utils.Utils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -40,12 +44,14 @@ import static org.litepal.LitePalApplication.getContext;
 public class SearchFriendActivity extends AppCompatActivity {
     private List<BaseObject> mUserList = new ArrayList<>();
     private RecyclerView mRecyclerView;
+    private List<UserObject> mRequestList = new ArrayList<>();
+    private RecyclerView mRequestsView;
 
     private ConstraintLayout mLayout;
     private Toolbar mToolbar;
     private SearchView mSearchView;
     private AppCompatImageView mSearchImage;
-    private TextView mKanbanView;
+    private AppCompatTextView mKanbanView;
     private TextView mSearchHintView;
     private ProgressBar mProgressBar;
 
@@ -58,7 +64,25 @@ public class SearchFriendActivity extends AppCompatActivity {
         initView();
         setAttributes();
         setListener();
+    }
 
+    @Override
+    protected void onStart() {
+        super.onStart();
+        //initRequestList();
+        RequestsResponse.generateService().getRequestList(Utils.getLogToken())
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(response->{
+                    if(response.getCode() == 0) {
+                        for(User user : response.getData().getRequests()) {
+                            mRequestList.add(new UserObject(new Users(user)));
+                        }
+                        mRequestsView.getAdapter().notifyDataSetChanged();
+                    } else {
+                        Toast.makeText(SearchFriendActivity.this, "获取好友申请列表失败", Toast.LENGTH_SHORT).show();
+                    }
+                });
     }
 
     private void initView() {
@@ -70,6 +94,7 @@ public class SearchFriendActivity extends AppCompatActivity {
         mSearchView = mToolbar.findViewById(R.id.menu_search);
         mSearchImage = mSearchView.findViewById(androidx.appcompat.R.id.search_button);
         mRecyclerView = findViewById(R.id.recycle_view);
+        mRequestsView = findViewById(R.id.friend_request);
         mProgressBar = findViewById(R.id.progress_bar);
     }
 
@@ -77,10 +102,16 @@ public class SearchFriendActivity extends AppCompatActivity {
         mToolbar.setTitle("添加好友");
         mSearchView.setQueryHint("手机号/校友号/昵称");
         mSearchImage.setVisibility(View.GONE);
-        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
-        mRecyclerView.setLayoutManager(layoutManager);
-        UserListAdapter adapter = new UserListAdapter(mUserList);
-        mRecyclerView.setAdapter(adapter);
+        //好友申请列表
+        LinearLayoutManager layoutManager1 = new LinearLayoutManager(this);
+        mRequestsView.setLayoutManager(layoutManager1);
+        RequestAdapter adapter1 = new RequestAdapter(mRequestList);
+        mRequestsView.setAdapter(adapter1);
+        //搜索用户列表
+        LinearLayoutManager layoutManager2 = new LinearLayoutManager(this);
+        mRecyclerView.setLayoutManager(layoutManager2);
+        UserListAdapter adapter2 = new UserListAdapter(mUserList);
+        mRecyclerView.setAdapter(adapter2);
     }
 
     private void setListener() {
@@ -145,6 +176,7 @@ public class SearchFriendActivity extends AppCompatActivity {
         mToolbar.setTitle("添加好友");
         mSearchHintView.setVisibility(View.GONE);
         mKanbanView.setVisibility(View.VISIBLE);
+        mRequestsView.setVisibility(View.VISIBLE);
         mRecyclerView.setVisibility(View.GONE);
         mUserList.clear();
     }
@@ -154,6 +186,8 @@ public class SearchFriendActivity extends AppCompatActivity {
         mSearchView.setFocusable(true);
         mSearchView.setIconified(false);
         mKanbanView.setVisibility(View.GONE);
+        mRequestsView.setVisibility(View.GONE);
+        mRecyclerView.setVisibility(View.VISIBLE);
     }
 
     private void searchUser(String data) {
@@ -193,7 +227,6 @@ public class SearchFriendActivity extends AppCompatActivity {
                     public void onSubscribe(Disposable d) {
                         mSearchHintView.setVisibility(View.GONE);
                         mProgressBar.setVisibility(View.VISIBLE);
-                        mRecyclerView.setVisibility(View.VISIBLE);
                     }
 
                     @Override

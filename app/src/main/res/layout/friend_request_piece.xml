@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <!--TODO:用户头像名字等重复的，做成一个模块-->
     <ImageView
         android:id="@+id/piece_icon"
         android:layout_width="wrap_content"
@@ -23,7 +24,6 @@
         app:layout_constraintLeft_toRightOf="@+id/piece_icon"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toTopOf="@id/piece_text"/>
-
     <TextView
         android:id="@+id/piece_text"
         android:layout_width="wrap_content"
@@ -35,13 +35,25 @@
         app:layout_constraintTop_toBottomOf="@+id/piece_name"
         app:layout_constraintBottom_toBottomOf="parent"/>
 
-    <TextView
-        android:id="@+id/piece_time"
+    <ImageView
+        android:id="@+id/refuse"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:padding="5dp"
-        android:singleLine="true"
-        android:ellipsize="end"
-        app:layout_constraintTop_toTopOf="@id/piece_icon"
+        android:src="@drawable/vector_drawable_close_circle"
+        android:minHeight="0dp"
+        android:minWidth="0dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"/>
+
+    <ImageView
+        android:id="@+id/agree"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/vector_drawable_check_circle"
+        android:minHeight="0dp"
+        android:minWidth="0dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/refuse"/>
 </androidx.constraintlayout.widget.ConstraintLayout>

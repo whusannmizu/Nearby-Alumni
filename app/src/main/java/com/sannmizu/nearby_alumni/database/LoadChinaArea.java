@@ -1,13 +1,13 @@
-package com.sannmizu.nearby_alumni.Database;
+package com.sannmizu.nearby_alumni.database;
 
 import android.content.Context;
 import android.util.Log;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import com.sannmizu.nearby_alumni.Database.ChinaArea.AreaBean;
-import com.sannmizu.nearby_alumni.Database.ChinaArea.CityBean;
-import com.sannmizu.nearby_alumni.Database.ChinaArea.ProvinceBean;
+import com.sannmizu.nearby_alumni.database.ChinaArea.AreaBean;
+import com.sannmizu.nearby_alumni.database.ChinaArea.CityBean;
+import com.sannmizu.nearby_alumni.database.ChinaArea.ProvinceBean;
 
 import java.io.BufferedReader;
 import java.io.IOException;

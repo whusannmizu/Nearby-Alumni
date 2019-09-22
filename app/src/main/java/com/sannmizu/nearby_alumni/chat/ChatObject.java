@@ -1,21 +1,40 @@
 package com.sannmizu.nearby_alumni.chat;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+
+import com.sannmizu.nearby_alumni.database.Users;
+
 public class ChatObject extends BaseObject{
+    public static final int TYPE = UserListAdapter.TYPE_CHAT;
     private int friend_id;
     private String name;
     private String text;
-    private String icon;
+    private String time;
+    private Bitmap icon;
 
-    public ChatObject(int id, String name, String icon, String text) {
-        super(UserListAdapter.TYPE_CHAT);
+    public ChatObject(int id, String name, Bitmap icon, String text, String time) {
+        super(TYPE);
         this.friend_id = id;
         this.name = name;
         this.text = text;
         this.icon = icon;
+        this.time = time;
     }
 
-    public ChatObject(int id, String name, String icon) {
-        this(id, name, icon, null);
+    public ChatObject(int id, String name, Bitmap icon) {
+        this(id, name, icon, null, null);
+    }
+
+    public ChatObject(Users user, NewMsgBean bean) {
+        super(TYPE);
+        this.friend_id = user.getUser_id();
+        this.name = user.getNickname();
+        this.text = bean.getContent();
+        this.time = bean.getTime();
+        if (user.getIcon() != null) {
+            this.icon = BitmapFactory.decodeByteArray(user.getIcon(), 0, user.getIcon().length);
+        }
     }
 
     public String getName() {
@@ -34,11 +53,11 @@ public class ChatObject extends BaseObject{
         this.text = text;
     }
 
-    public String getIcon() {
+    public Bitmap getIcon() {
         return icon;
     }
 
-    public void setIcon(String icon) {
+    public void setIcon(Bitmap icon) {
         this.icon = icon;
     }
 
@@ -48,5 +67,13 @@ public class ChatObject extends BaseObject{
 
     public void setFriend_id(int friend_id) {
         this.friend_id = friend_id;
+    }
+
+    public String getTime() {
+        return time;
+    }
+
+    public void setTime(String time) {
+        this.time = time;
     }
 }
