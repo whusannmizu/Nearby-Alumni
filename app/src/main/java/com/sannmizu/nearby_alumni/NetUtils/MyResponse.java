@@ -34,7 +34,7 @@ public class MyResponse<T> {
         Call<MyResponse> add(@Path("id") int userid, @Query("logToken") String logToken);
     }
     public static interface deleteService{
-        @DELETE("account/friends/{id}")
+        @DELETE("account/friends/{userId}")
         Call<MyResponse>delete(@Path("userId")int userId,@Field("logToken")String logToken);
     }
     public String getResult() {

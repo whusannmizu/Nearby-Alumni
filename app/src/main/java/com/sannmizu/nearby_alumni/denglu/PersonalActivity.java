@@ -30,8 +30,8 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
 import com.google.gson.JsonObject;
-import com.sannmizu.nearby_alumni.Database.Area;
-import com.sannmizu.nearby_alumni.Database.ChinaArea.ProvinceBean;
+import com.sannmizu.nearby_alumni.database.Area;
+import com.sannmizu.nearby_alumni.database.ChinaArea.ProvinceBean;
 import com.sannmizu.nearby_alumni.NetUtils.ChatResponse;
 import com.sannmizu.nearby_alumni.NetUtils.MyResponse;
 import com.sannmizu.nearby_alumni.NetUtils.Net;

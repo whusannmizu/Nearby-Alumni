@@ -1,5 +1,6 @@
 package com.sannmizu.nearby_alumni.denglu;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
@@ -49,13 +50,22 @@ public class guanzhu extends AppCompatActivity implements View.OnClickListener,M
     private TextView gtext1,gtext2,gt1,gt2;
     private Button gbutton1,gbutton2;
     String name,age,sign,sex,constellation,career,areaId,icon1,icon,id;
-    /*Intent intent=getIntent();
-    String userid=intent.getStringExtra("userid");*/
-    int userid=10007;
+    int userid;
+    public static void actionStart(Context context, int userId) {
+        Intent intent = new Intent(context, guanzhu.class);
+        intent.putExtra("userid", userId);
+        context.startActivity(intent);
+    }
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.guanzhu);
+        setContentView(R.layout.guanzhu);Intent intent=getIntent();
+        userid = intent.getIntExtra("userid", 0);
+        if(userid == 0) {
+            //TODO:用户不存在的特殊展示
+            finish();
+        }
+
         scrollView=(ScrollView)findViewById(R.id.gbeijing);
         opicture=findViewById(R.id.opicture);
         obackground=findViewById(R.id.obackground);

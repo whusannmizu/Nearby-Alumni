@@ -5,6 +5,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 
 import com.sannmizu.nearby_alumni.database.Users;
+import com.sannmizu.nearby_alumni.utils.BitmapUtils;
 
 public class UserObject extends BaseObject{
     public static final int TYPE = UserListAdapter.TYPE_USER;
@@ -31,7 +32,8 @@ public class UserObject extends BaseObject{
         this.name = user.getNickname();
         this.sign = user.getSign();
         if (user.getIcon() != null) {
-            this.icon = BitmapFactory.decodeByteArray(user.getIcon(), 0, user.getIcon().length);
+            Bitmap bitmap = BitmapFactory.decodeByteArray(user.getIcon(), 0, user.getIcon().length);
+            this.icon = BitmapUtils.zoomBitmap(bitmap, 100, 100);
         }
 
     }
