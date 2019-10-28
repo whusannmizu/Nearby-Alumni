@@ -3,7 +3,7 @@ package com.sannmizu.nearby_alumni.chat;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 
-import com.sannmizu.nearby_alumni.database.Users;
+import com.sannmizu.nearby_alumni.Database.Users;
 import com.sannmizu.nearby_alumni.utils.BitmapUtils;
 
 public class ChatObject extends BaseObject{

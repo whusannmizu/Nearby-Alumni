@@ -35,7 +35,7 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.Toast;
 
-import com.sannmizu.nearby_alumni.database.ChatRecord;
+import com.sannmizu.nearby_alumni.Database.ChatRecord;
 import com.sannmizu.nearby_alumni.NetUtils.ChatResponse;
 import com.sannmizu.nearby_alumni.R;
 import com.sannmizu.nearby_alumni.cacheUtils.LocalCacheUtils;

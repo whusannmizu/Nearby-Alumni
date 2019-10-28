@@ -1,4 +1,4 @@
-package com.sannmizu.nearby_alumni.database;
+package com.sannmizu.nearby_alumni.Database;
 
 import org.litepal.annotation.Column;
 import org.litepal.crud.LitePalSupport;

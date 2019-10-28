@@ -19,7 +19,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.sannmizu.nearby_alumni.database.Users;
+import com.sannmizu.nearby_alumni.Database.Users;
 import com.sannmizu.nearby_alumni.NetUtils.MyResponse;
 import com.sannmizu.nearby_alumni.NetUtils.RequestsResponse;
 import com.sannmizu.nearby_alumni.NetUtils.User;

@@ -10,7 +10,7 @@ import android.os.Bundle;
 import android.util.Log;
 
 import com.google.gson.Gson;
-import com.sannmizu.nearby_alumni.database.ChatRecord;
+import com.sannmizu.nearby_alumni.Database.ChatRecord;
 import com.sannmizu.nearby_alumni.MiPush.Bean.ChatBean;
 import com.sannmizu.nearby_alumni.MiPush.Bean.FriendReBean;
 import com.sannmizu.nearby_alumni.chat.NewMsgBean;

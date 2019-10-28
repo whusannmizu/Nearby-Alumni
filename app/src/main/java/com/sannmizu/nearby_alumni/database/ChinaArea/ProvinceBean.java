@@ -1,4 +1,4 @@
-package com.sannmizu.nearby_alumni.database.ChinaArea;
+package com.sannmizu.nearby_alumni.Database.ChinaArea;
 
 import org.litepal.crud.LitePalSupport;
 

@@ -22,7 +22,7 @@ public class MainActivity extends AppCompatActivity {
         init();
         button1 = findViewById(R.id.button1);
         button2 = findViewById(R.id.button2);
-        button3 = findViewById(R.id.button3);
+        //button3 = findViewById(R.id.button3);
         button1.setOnClickListener(v->{
             Intent intent = new Intent(MainActivity.this, LandingActivity.class);
             startActivity(intent);
