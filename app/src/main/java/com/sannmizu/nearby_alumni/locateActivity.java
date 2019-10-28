@@ -127,6 +127,7 @@ public class locateActivity extends AppCompatActivity {
                     else if (bdLocation.getLocType()==BDLocation.TypeNetWorkLocation){
                         currentPosition.append("网络");
                     }
+                    getlocate();
                     //positonText.setText(currentPosition);
                 }
             });
@@ -145,8 +146,8 @@ public class locateActivity extends AppCompatActivity {
         SharedPreferences.Editor editor;
         pref= PreferenceManager.getDefaultSharedPreferences(this);
         String logToken = pref.getString("logToken", "null");
-        //String latitude=pref.getString("latitude","null");
-        //String longitude=pref.getString("longitude","null");
+        String latitude=pref.getString("latitude","null");
+        String longitude=pref.getString("longitude","null");
         if(logToken == "null") {    //其实还要判断logToken是否失效
                 Toast.makeText(this, "请先登录", Toast.LENGTH_SHORT).show();
         } else {

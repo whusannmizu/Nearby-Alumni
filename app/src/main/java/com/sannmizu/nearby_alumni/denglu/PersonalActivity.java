@@ -7,11 +7,14 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.provider.DocumentsContract;
 import android.provider.MediaStore;
+import android.util.Base64;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -30,8 +33,8 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
 import com.google.gson.JsonObject;
-import com.sannmizu.nearby_alumni.Database.Area;
-import com.sannmizu.nearby_alumni.Database.ChinaArea.ProvinceBean;
+import com.sannmizu.nearby_alumni.database.Area;
+import com.sannmizu.nearby_alumni.database.ChinaArea.ProvinceBean;
 import com.sannmizu.nearby_alumni.NetUtils.ChatResponse;
 import com.sannmizu.nearby_alumni.NetUtils.MyResponse;
 import com.sannmizu.nearby_alumni.NetUtils.Net;
@@ -557,22 +560,24 @@ public class PersonalActivity extends AppCompatActivity implements MyOneLineView
         BASE64Encoder encoder=new BASE64Encoder();
         return encoder.encode(data);
     }
-    public static boolean generateImage(String imgStr,String path)throws IOException {
+    /*public static boolean generateImage(String imgStr,String path)throws IOException {
         if (imgStr==null){
             return false;
         }
         BASE64Decoder decoder=new BASE64Decoder();
         byte[] b=decoder.decodeBuffer(imgStr);
 
-        for (int i=0;i<b.length;i++){
+        for (int i=0;i<b.length;++i){
             if (b[i]<0){
                 b[i]+=256;
             }
         }
+
+        String filename= String.format("%s.jpg", this.createGUIDService.getGUID());
         OutputStream out=new FileOutputStream(path);
         out.write(b);
         out.flush();
         out.close();
         return true;
-    }
+    }*/
 }

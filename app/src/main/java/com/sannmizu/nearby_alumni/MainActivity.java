@@ -9,12 +9,12 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.widget.Button;
 
-import com.sannmizu.nearby_alumni.Database.LoadChinaArea;
+import com.sannmizu.nearby_alumni.database.LoadChinaArea;
 import com.sannmizu.nearby_alumni.denglu.LandingActivity;
 
 
 public class MainActivity extends AppCompatActivity {
-    private Button button1, button2, button3;
+    private Button button1, button2;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -22,7 +22,6 @@ public class MainActivity extends AppCompatActivity {
         init();
         button1 = findViewById(R.id.button1);
         button2 = findViewById(R.id.button2);
-        button3 = findViewById(R.id.button3);
         button1.setOnClickListener(v->{
             Intent intent = new Intent(MainActivity.this, LandingActivity.class);
             startActivity(intent);
@@ -31,11 +30,6 @@ public class MainActivity extends AppCompatActivity {
             Intent intent = new Intent(MainActivity.this, ChatListActivity.class);
             startActivity(intent);
         });
-        button3.setOnClickListener(v->{
-            //Intent intent = new Intent(MainActivity.this, LruTestActivity.class);
-            //startActivity(intent);
-        });
-
     }
 
     public void init() {
