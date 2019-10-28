@@ -6,6 +6,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.util.Base64;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
@@ -184,8 +185,9 @@ public class guanzhu extends AppCompatActivity implements View.OnClickListener,M
                     constellation = response.body().getData().getInfo().getConstellation();
                     career = response.body().getData().getInfo().getCareer();
                     areaId = String.valueOf(response.body().getData().getInfo().getArea_id());
-                    icon1 = response.body().getData().getInfo().getIcon_base64();
+                    icon = response.body().getData().getInfo().getIcon_base64();
                     gt2.setText(sign);
+                    stringToBitmap(icon,opicture);
                     /*try {
                         generateImage(icon1,icon);
                     } catch (IOException e) {
@@ -323,5 +325,16 @@ public class guanzhu extends AppCompatActivity implements View.OnClickListener,M
         out.close();
         return true;
     }
-
+    public static Bitmap stringToBitmap(String string,ImageView imageView){
+        Bitmap bitmap=null;
+        try
+        {
+            byte[] bitmapArray= Base64.decode(string.split(",")[1],Base64.DEFAULT);
+            bitmap=BitmapFactory.decodeByteArray(bitmapArray,0,bitmapArray.length);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        imageView.setImageBitmap(bitmap);
+        return bitmap;
+    }
 }
