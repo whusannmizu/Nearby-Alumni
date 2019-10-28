@@ -1,5 +1,7 @@
 package com.sannmizu.nearby_alumni.chat;
 
+import android.graphics.Bitmap;
+import android.graphics.Matrix;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,6 +15,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.sannmizu.nearby_alumni.NetUtils.FriendsResponse;
 import com.sannmizu.nearby_alumni.NetUtils.MyCallback;
 import com.sannmizu.nearby_alumni.R;
+import com.sannmizu.nearby_alumni.denglu.guanzhu;
 
 import java.util.List;
 
@@ -59,6 +62,11 @@ public class RequestAdapter extends RecyclerView.Adapter<RequestAdapter.RequestH
             holder.userImage.setImageBitmap(user.getIcon());
         } else {
             holder.userImage.setImageResource(R.drawable.vector_drawable_default);
+        }
+        if(!holder.userImage.hasOnClickListeners()) {
+            holder.userImage.setOnClickListener(v->{
+                guanzhu.actionStart(v.getContext(), user.getId());
+            });
         }
         if(!holder.agree.hasOnClickListeners()) {
             holder.agree.setOnClickListener(v->{
@@ -119,4 +127,5 @@ public class RequestAdapter extends RecyclerView.Adapter<RequestAdapter.RequestH
     public int getItemCount() {
         return mRequestList.size();
     }
+
 }

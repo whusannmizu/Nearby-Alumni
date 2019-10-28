@@ -4,6 +4,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 
 import com.sannmizu.nearby_alumni.database.Users;
+import com.sannmizu.nearby_alumni.utils.BitmapUtils;
 
 public class ChatObject extends BaseObject{
     public static final int TYPE = UserListAdapter.TYPE_CHAT;
@@ -33,7 +34,8 @@ public class ChatObject extends BaseObject{
         this.text = bean.getContent();
         this.time = bean.getTime();
         if (user.getIcon() != null) {
-            this.icon = BitmapFactory.decodeByteArray(user.getIcon(), 0, user.getIcon().length);
+            Bitmap bitmap = BitmapFactory.decodeByteArray(user.getIcon(), 0, user.getIcon().length);
+            this.icon = BitmapUtils.zoomBitmap(bitmap, 100, 100);
         }
     }
 

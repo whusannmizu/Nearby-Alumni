@@ -1,6 +1,8 @@
 package com.sannmizu.nearby_alumni.chat;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.Matrix;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,6 +13,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.sannmizu.nearby_alumni.R;
+import com.sannmizu.nearby_alumni.denglu.guanzhu;
 
 import java.util.List;
 
@@ -77,7 +80,11 @@ public class UserListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                 ((ChatHolder)holder).chatName.setText(chat.getName());
                 ((ChatHolder)holder).chatText.setText(chat.getText());
                 ((ChatHolder)holder).chatTime.setText(chat.getTime());
-                ((ChatHolder)holder).chatImage.setImageResource(R.drawable.vector_drawable_default);
+                if(chat.getIcon() != null) {
+                    ((ChatHolder)holder).chatImage.setImageBitmap(chat.getIcon());
+                } else {
+                    ((ChatHolder) holder).chatImage.setImageResource(R.drawable.vector_drawable_default);
+                }
                 if(!holder.itemView.hasOnClickListeners()) {
                     holder.itemView.setOnClickListener(v -> {
                         ChatActivity.actionStart(v.getContext(), chat.getFriend_id(), chat.getName());
@@ -96,7 +103,7 @@ public class UserListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                 }
                 if(!holder.itemView.hasOnClickListeners()) {
                     holder.itemView.setOnClickListener(v -> {
-                        ChatActivity.actionStart(v.getContext(), friend.getId(), friend.getName());
+                        guanzhu.actionStart(v.getContext(), friend.getId());
                     });
                 }
             }
