@@ -1,4 +1,4 @@
-package com.sannmizu.nearby_alumni.Database;
+package com.sannmizu.nearby_alumni.database;
 
 import android.util.Log;
 

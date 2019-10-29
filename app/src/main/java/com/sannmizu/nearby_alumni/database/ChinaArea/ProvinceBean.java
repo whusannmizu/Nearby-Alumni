@@ -1,6 +1,4 @@
-package com.sannmizu.nearby_alumni.Database.ChinaArea;
-
-import org.litepal.crud.LitePalSupport;
+package com.sannmizu.nearby_alumni.database.ChinaArea;
 
 import java.util.List;
 

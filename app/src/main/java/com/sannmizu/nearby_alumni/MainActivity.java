@@ -9,8 +9,9 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.widget.Button;
 
-import com.sannmizu.nearby_alumni.Database.LoadChinaArea;
+import com.sannmizu.nearby_alumni.database.LoadChinaArea;
 import com.sannmizu.nearby_alumni.denglu.LandingActivity;
+import com.sannmizu.nearby_alumni.denglu.MyActivity;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -24,17 +25,17 @@ public class MainActivity extends AppCompatActivity {
         button2 = findViewById(R.id.button2);
         //button3 = findViewById(R.id.button3);
         button1.setOnClickListener(v->{
-            Intent intent = new Intent(MainActivity.this, LandingActivity.class);
+            Intent intent = new Intent(MainActivity.this, MyActivity.class);
             startActivity(intent);
         });
         button2.setOnClickListener(v->{
             Intent intent = new Intent(MainActivity.this, ChatListActivity.class);
             startActivity(intent);
         });
-        button3.setOnClickListener(v->{
+       /* button3.setOnClickListener(v->{
             //Intent intent = new Intent(MainActivity.this, LruTestActivity.class);
             //startActivity(intent);
-        });
+        });*/
 
     }
 

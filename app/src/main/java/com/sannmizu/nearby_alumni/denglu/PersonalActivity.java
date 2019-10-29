@@ -33,42 +33,28 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
 import com.google.gson.JsonObject;
-import com.sannmizu.nearby_alumni.Database.Area;
-import com.sannmizu.nearby_alumni.Database.ChinaArea.ProvinceBean;
-import com.sannmizu.nearby_alumni.NetUtils.ChatResponse;
+import com.sannmizu.nearby_alumni.database.Area;
 import com.sannmizu.nearby_alumni.NetUtils.MyResponse;
 import com.sannmizu.nearby_alumni.NetUtils.Net;
-import com.sannmizu.nearby_alumni.NetUtils.infoResponse;
-import com.sannmizu.nearby_alumni.NetUtils.locateResponse;
 import com.sannmizu.nearby_alumni.R;
-import com.sannmizu.nearby_alumni.locateActivity;
 import com.sannmizu.nearby_alumni.utils.AESUtils;
-import com.sannmizu.nearby_alumni.utils.encoder.BASE64Decoder;
 import com.sannmizu.nearby_alumni.utils.encoder.BASE64Encoder;
 
 import org.litepal.LitePal;
-import org.litepal.crud.LitePalSupport;
 
+import java.io.ByteArrayOutputStream;
 import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
-import io.reactivex.Observer;
-import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.disposables.Disposable;
-import io.reactivex.schedulers.Schedulers;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
-import io.reactivex.ObservableSource;
-import io.reactivex.functions.Function;
 
 public class PersonalActivity extends AppCompatActivity implements MyOneLineView.OnArrowClickListener{
     MyOneLineView poneitem,ptwoitem,pthreeitem,pfouritem,pfiveitem,psixitem,psevenitem,peightitem,pnightitem;
@@ -490,11 +476,7 @@ public class PersonalActivity extends AppCompatActivity implements MyOneLineView
         String icon1=spref.getString("imagepath",null);
         String icon= null;
         if (icon1!=null) {
-            try {
-                icon = getImageStr(icon1);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+            icon = bitmapToString(icon1);
         }
         JsonObject requestData=new JsonObject();
         requestData.addProperty("name",name);
@@ -542,7 +524,7 @@ public class PersonalActivity extends AppCompatActivity implements MyOneLineView
                     });
                 });
             }
-                //locateActivity.instance.getlocate(this);
+            //locateActivity.instance.getlocate(this);
         }
     }
 
@@ -560,6 +542,45 @@ public class PersonalActivity extends AppCompatActivity implements MyOneLineView
         BASE64Encoder encoder=new BASE64Encoder();
         return encoder.encode(data);
     }
+    //计算图片的缩放值
+    public static int calculateInSampleSize(BitmapFactory.Options options, int reqWidth, int reqHeight) {
+        final int height = options.outHeight;
+        final int width = options.outWidth;
+        int inSampleSize = 1;
+
+        if (height > reqHeight || width > reqWidth) {
+            final int heightRatio = Math.round((float) height/ (float) reqHeight);
+            final int widthRatio = Math.round((float) width / (float) reqWidth);
+            inSampleSize = heightRatio < widthRatio ? heightRatio : widthRatio;
+        }
+        return inSampleSize;
+    }
+
+    // 根据路径获得图片并压缩，返回bitmap用于显示
+    public static Bitmap getSmallBitmap(String filePath) {
+        final BitmapFactory.Options options = new BitmapFactory.Options();
+        options.inJustDecodeBounds = true;
+        BitmapFactory.decodeFile(filePath, options);
+
+        // Calculate inSampleSize
+        //options.inSampleSize = calculateInSampleSize(options, 480, 800);
+        options.inSampleSize=10;
+        // Decode bitmap with inSampleSize set
+        options.inJustDecodeBounds = false;
+
+        return BitmapFactory.decodeFile(filePath, options);
+    }
+
+    //把bitmap转换成String
+    public static String bitmapToString(String filePath) {
+
+        Bitmap bm = getSmallBitmap(filePath);
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        bm.compress(Bitmap.CompressFormat.JPEG, 40,baos);
+        byte[] b = baos.toByteArray();
+        return Base64.encodeToString(b, Base64.DEFAULT);
+    }
+
     /*public static boolean generateImage(String imgStr,String path)throws IOException {
         if (imgStr==null){
             return false;

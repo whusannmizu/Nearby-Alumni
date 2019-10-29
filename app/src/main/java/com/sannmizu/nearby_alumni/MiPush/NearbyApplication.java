@@ -11,6 +11,7 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.baidu.mapapi.SDKInitializer;
 import com.sannmizu.nearby_alumni.utils.SharedPreUtils;
 import com.sannmizu.nearby_alumni.utils.Util;
 import com.xiaomi.channel.commonutils.logger.LoggerInterface;
@@ -47,6 +48,7 @@ public class NearbyApplication extends Application {
         super.onCreate();
         //数据库
         LitePal.initialize(this);
+        SDKInitializer.initialize(getApplicationContext());
         LitePal.getDatabase();
         //Utils
         Util.initialize(this);

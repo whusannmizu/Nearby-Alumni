@@ -102,12 +102,13 @@ public class guanzhu extends AppCompatActivity implements View.OnClickListener,M
         {
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
-        String uri=spref.getString("imagepath",null);
+        /*String uri=spref.getString("imagepath",null);
         if (uri!=null)
         {
+
             Bitmap bitmap=BitmapFactory.decodeFile(uri);
             opicture.setImageBitmap(bitmap);
-        }
+        }*/
         /*String uri1=spref.getString("bing_pic",null);
         if (uri1!=null)
         {

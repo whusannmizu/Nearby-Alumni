@@ -11,6 +11,8 @@
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
     <uses-permission android:name="android.permission.GET_TASKS" />
     <uses-permission android:name="android.permission.VIBRATE" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
+    <uses-permission android:name="android.permission.RECORD_AUDIO"/>
 
     <permission
         android:name="com.sannmizu.nearby_alumni.permission.MIPUSH_RECEIVE"
@@ -30,6 +32,10 @@
         <meta-data
             android:name="com.sannmizu.nearby_alumni"
             android:value="4PpX2Cz1Dd9lW86t9mjCaDXC5nRAYvz9"/>
+        <service android:name="com.baidu.location.f"
+            android:enabled="true"
+            android:process=":remote">
+        </service>
         <service
             android:name=".InitService"
             android:enabled="true"
@@ -123,9 +129,6 @@
             android:theme="@style/AppTheme"
             android:windowSoftInputMode="adjustPan|stateHidden"
             android:label="备注"/>
-=======
-
->>>>>>> c5a5bdb178b5962baac4c64db0d663888d05c793
         <service
             android:name="com.xiaomi.push.service.XMPushService"
             android:enabled="true"

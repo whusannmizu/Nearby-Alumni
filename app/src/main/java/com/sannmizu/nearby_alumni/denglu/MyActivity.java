@@ -6,6 +6,7 @@ import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
@@ -20,11 +21,15 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.baidu.location.LocationClient;
+import com.baidu.mapapi.SDKInitializer;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.drawable.GlideDrawable;
 import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.ViewTarget;
 import com.sannmizu.nearby_alumni.R;
+import com.sannmizu.nearby_alumni.locate;
+import com.sannmizu.nearby_alumni.utils.locateback;
 
 import java.io.IOException;
 
@@ -192,8 +197,23 @@ public class MyActivity extends AppCompatActivity implements MyOneLineView.OnArr
     public void onRootClick(View view){
         switch ((int)view.getTag()){
             case 11:
-                startActivity(new Intent(MyActivity.this,ceshi.class));
-                ActivityCollector.addActivity(this);
+                /*startActivity(new Intent(MyActivity.this,ceshi.class));
+                ActivityCollector.addActivity(this);*/
+                locate locate=new locate();
+                Context context=getApplicationContext();
+                locate.setApplicationContext(context);
+                locate.requesLocation(new locateback() {
+                    @Override
+                    public void onReceiveLocation(String latitude, String longitude) {
+
+                    }
+
+                    @Override
+                    public void onConnentHotSpotMessage() {
+
+                    }
+                });
+                //locate.setApplicationContext(getApplicationContext());
                 break;
         }
     }

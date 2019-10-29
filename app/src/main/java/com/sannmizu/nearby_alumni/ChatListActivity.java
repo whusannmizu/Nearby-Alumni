@@ -9,7 +9,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 
-import com.sannmizu.nearby_alumni.Database.Users;
+import com.sannmizu.nearby_alumni.database.Users;
 import com.sannmizu.nearby_alumni.chat.BaseObject;
 import com.sannmizu.nearby_alumni.chat.ChatObject;
 import com.sannmizu.nearby_alumni.chat.NewMsgBean;

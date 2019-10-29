@@ -3,7 +3,7 @@ package com.sannmizu.nearby_alumni.chat;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import com.sannmizu.nearby_alumni.Database.ChatRecord;
+import com.sannmizu.nearby_alumni.database.ChatRecord;
 
 import java.util.Date;
 
