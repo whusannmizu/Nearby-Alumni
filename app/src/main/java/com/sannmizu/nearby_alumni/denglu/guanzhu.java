@@ -234,7 +234,7 @@ public class guanzhu extends AppCompatActivity implements View.OnClickListener,M
                         gbutton2.setText("添加好友");
                     }
                     else
-                        gbutton2.setText("连接失败");
+                        gbutton2.setText("添加好友");
                 }
 
                 @Override

@@ -59,8 +59,8 @@ public class shezhiActivity extends AppCompatActivity implements MyOneLineView.O
         stwoitem.initItemWidthEdit(R.drawable.ic_tuxiang,"背景","请选择你的背景")
         .setOnArrowClickListener(this,1);
         stwoitem.showDivider(true,true);
-        sthreeitem.initMine(R.drawable.ic_guanyu,"关于","",true);
-        sfouritem.initMine(R.drawable.ic_bangzhuyufankui,"帮助","",true);
+        sthreeitem.initMine(R.drawable.ic_guanyu,"关于","",true).setOnArrowClickListener(this,2);
+        sfouritem.initMine(R.drawable.ic_bangzhuyufankui,"帮助","",true).setOnArrowClickListener(this,3);
         sfiveitem.init(R.drawable.ic_zhanghaoyuanquan,"账号与安全");
         sfiveitem.showDivider(true,true);
         stwoitem.setEditable(false);
@@ -78,6 +78,12 @@ public class shezhiActivity extends AppCompatActivity implements MyOneLineView.O
                 }
                 else
                     openAlbum();
+                break;
+            case 2:
+                startActivity(new Intent(shezhiActivity.this,about.class));
+                break;
+            case 3:
+                startActivity(new Intent(shezhiActivity.this,Help.class));
                 break;
         }
     }

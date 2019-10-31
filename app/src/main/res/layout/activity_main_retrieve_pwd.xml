@@ -20,6 +20,7 @@
         android:contentDescription="@null"
         android:paddingTop="48dp"
         app:srcCompat="@mipmap/timg1" />
+
     <LinearLayout
         android:id="@+id/ll_retrieve_tel"
         android:layout_width="match_parent"
@@ -47,7 +48,7 @@
             android:background="@color/login_line_color" />
 
         <EditText
-            android:id="@+id/et_retrieve_tel"
+            android:id="@+id/tel_reset_tel"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
@@ -76,40 +77,40 @@
     </LinearLayout>
 
     <LinearLayout
-        android:id="@+id/ll_retrieve_code"
+        android:id="@+id/ll_reset_pwd"
         android:layout_width="match_parent"
         android:layout_height="56dp"
         android:layout_marginLeft="24dp"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="56dp"
         android:layout_marginRight="24dp"
         android:background="@drawable/bg_login_input_ok"
         android:gravity="center_vertical"
         android:orientation="horizontal">
 
         <ImageView
-            android:id="@+id/iv_retrieve_code_icon"
+            android:id="@+id/iv_reset_pwd_icon"
             android:layout_width="24dp"
             android:layout_height="24dp"
             android:layout_marginLeft="14dp"
-            android:layout_marginRight="14dp"
             android:contentDescription="@null"
-            app:srcCompat="@mipmap/ic_signup_sms" />
+            app:srcCompat="@mipmap/ic_login_password"
+            tools:ignore="RtlHardcoded" />
 
         <View
             android:layout_width="1px"
             android:layout_height="24dp"
-            android:background="@color/login_line_color" />
+            android:layout_marginLeft="14dp"
+            android:background="@color/login_line_color"
+            tools:ignore="RtlHardcoded" />
 
         <EditText
-            android:id="@+id/et_retrieve_code_input"
+            android:id="@+id/pwd_reset_pwd"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_marginLeft="16dp"
-            android:layout_marginRight="16dp"
             android:layout_weight="1"
             android:background="@null"
-            android:hint="@string/register_sms_auth_code"
-            android:inputType="text"
+            android:hint="@string/reset_pwd_hint"
+            android:inputType="textPassword"
             android:maxLines="1"
             android:minLines="1"
             android:paddingLeft="4dp"
@@ -119,21 +120,73 @@
             android:textCursorDrawable="@null"
             android:textSize="16sp" />
 
-        <TextView
-            android:id="@+id/retrieve_sms_call"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+
+        <ImageView
+            android:id="@+id/iv_reset_pwd_del"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
             android:layout_marginRight="16dp"
-            android:alpha="0.4"
-            android:background="@drawable/bg_register_call_sms"
-            android:gravity="center_vertical"
+            android:contentDescription="@null"
+            android:scaleType="fitCenter"
+            android:visibility="gone"
+            app:srcCompat="@mipmap/ic_clear"
+            tools:ignore="RtlHardcoded" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/reset_pwd"
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:layout_marginLeft="24dp"
+        android:layout_marginTop="56dp"
+        android:layout_marginRight="24dp"
+        android:background="@drawable/bg_login_input_ok"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:id="@+id/reset_pwd_icon"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_marginLeft="14dp"
+            android:contentDescription="@null"
+            app:srcCompat="@mipmap/ic_login_password"
+            tools:ignore="RtlHardcoded" />
+
+        <View
+            android:layout_width="1px"
+            android:layout_height="24dp"
+            android:layout_marginLeft="14dp"
+            android:background="@color/login_line_color"
+            tools:ignore="RtlHardcoded" />
+
+        <EditText
+            android:id="@+id/reset_pwd1"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@null"
+            android:hint="请重新输入一次"
+            android:inputType="textPassword"
+            android:maxLines="1"
+            android:minLines="1"
             android:paddingLeft="4dp"
-            android:paddingTop="2dp"
             android:paddingRight="4dp"
-            android:paddingBottom="2dp"
-            android:text="@string/register_sms_hint"
             android:textColor="@color/white"
-            android:textSize="12sp"
+            android:textColorHint="@color/login_line_color"
+            android:textCursorDrawable="@null"
+            android:textSize="16sp" />
+
+
+        <ImageView
+            android:id="@+id/iv_reset_pwd_del1"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_marginRight="16dp"
+            android:contentDescription="@null"
+            android:scaleType="fitCenter"
+            android:visibility="gone"
+            app:srcCompat="@mipmap/ic_clear"
             tools:ignore="RtlHardcoded" />
     </LinearLayout>
 
@@ -144,11 +197,11 @@
         android:layout_marginLeft="24dp"
         android:layout_marginTop="48dp"
         android:layout_marginRight="24dp"
-        android:background="@drawable/bg_login_submit_lock"
+        android:background="@drawable/bg_login_submit"
         android:elevation="0dp"
         android:outlineProvider="none"
         android:text="@string/retrieve_pwd_step_hint"
-        android:textColor="@color/account_lock_font_color"
+        android:textColor="#FFFFFF"
         android:textSize="18sp"
         tools:targetApi="lollipop" />
 
