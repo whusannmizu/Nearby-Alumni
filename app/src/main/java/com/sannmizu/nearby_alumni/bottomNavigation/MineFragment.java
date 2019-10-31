@@ -113,6 +113,8 @@ public class MineFragment extends Fragment implements MyOneLineView.OnArrowClick
                 public void ongetdata(String id, String name, String age, String sign, String sex, String constellaiton, String career, String areaId, String icon) {
                     MineFragment.this.nichen = name;
                     MineFragment.this.sign = sign;
+                    snichen.setText(nichen);
+                    signtext.setText(sign);
                 }
             });
         }
