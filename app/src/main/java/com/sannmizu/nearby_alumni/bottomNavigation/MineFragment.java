@@ -26,10 +26,12 @@ import com.bumptech.glide.load.resource.drawable.GlideDrawable;
 import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.ViewTarget;
 import com.sannmizu.nearby_alumni.R;
+import com.sannmizu.nearby_alumni.denglu.Databack;
 import com.sannmizu.nearby_alumni.denglu.HttpUtil;
 import com.sannmizu.nearby_alumni.denglu.LandingActivity;
 import com.sannmizu.nearby_alumni.denglu.MyOneLineView;
 import com.sannmizu.nearby_alumni.denglu.PersonalActivity;
+import com.sannmizu.nearby_alumni.denglu.dataget;
 import com.sannmizu.nearby_alumni.denglu.guanzhu;
 import com.sannmizu.nearby_alumni.denglu.shezhiActivity;
 import com.sannmizu.nearby_alumni.utils.AccountUtils;
@@ -48,6 +50,7 @@ public class MineFragment extends Fragment implements MyOneLineView.OnArrowClick
  TextView snichen,mwode,signtext;
  private ImageView picture,mpicture;
  private LinearLayout mbeijing;
+ private String nichen,sign;
  ImageView mbingmic;
  int imageSize, radius;
 
@@ -101,9 +104,19 @@ public class MineFragment extends Fragment implements MyOneLineView.OnArrowClick
         picture=view.findViewById(R.id.picture);
         imageSize = getResources().getDimensionPixelSize(R.dimen.image_size);
         radius = getResources().getDimensionPixelSize(R.dimen.radius);
-        String nichen=spref.getString("nicheng","");
+        nichen=spref.getString("nicheng","");
+        sign=spref.getString("qianming","");
+        int useid=AccountUtils.getCurrentUserId();
+        if (nichen.length()==0||sign.length()==0) {
+            dataget.getdata(useid, new Databack() {
+                @Override
+                public void ongetdata(String id, String name, String age, String sign, String sex, String constellaiton, String career, String areaId, String icon) {
+                    MineFragment.this.nichen = name;
+                    MineFragment.this.sign = sign;
+                }
+            });
+        }
         snichen.setText(nichen);
-        String sign=spref.getString("qianming","");
         signtext.setText(sign);
         //new LoadTask1().execute();
         String uri=spref.getString("imagePath",null);

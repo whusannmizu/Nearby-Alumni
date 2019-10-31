@@ -55,10 +55,7 @@ private EditText telEdit,pwdEdit,pwdEdit1;
         String type = "tel";
         String pwd = pwdEdit.getText().toString();
         String pwd1 = pwdEdit1.getText().toString();
-        if (pwd != pwd1) {
-            Toast toast = Toast.makeText(ForgetPwdActivity.this, "密码输入错误", Toast.LENGTH_SHORT);
-        }
-        else {
+        if (pwd.equals(pwd1)) {
             String requestStr = ForgetResponse.RequestStr(type, tel, pwd);
             Retrofit retrofit = new Retrofit.Builder()
                     .baseUrl(Net.BaseHost)
@@ -78,6 +75,9 @@ private EditText telEdit,pwdEdit,pwdEdit1;
                     t.printStackTrace();
                 }
             });
+        }
+        else {
+            Toast.makeText(ForgetPwdActivity.this, "密码输入错误", Toast.LENGTH_SHORT).show();
         }
     }
 }

@@ -23,6 +23,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
 import com.bumptech.glide.Glide;
+import com.sannmizu.nearby_alumni.NetUtils.MyCallback;
 import com.sannmizu.nearby_alumni.NetUtils.MyResponse;
 import com.sannmizu.nearby_alumni.NetUtils.Net;
 import com.sannmizu.nearby_alumni.NetUtils.addresponse;
@@ -42,6 +43,9 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
+
+import static com.sannmizu.nearby_alumni.NetUtils.FriendsResponse.addFriend;
+import static com.sannmizu.nearby_alumni.NetUtils.FriendsResponse.deleteFriend;
 
 public class guanzhu extends AppCompatActivity implements View.OnClickListener,MyOneLineView.OnRootClickListener{
     private MyOneLineView gone,gtwo;
@@ -79,7 +83,21 @@ public class guanzhu extends AppCompatActivity implements View.OnClickListener,M
         gbutton2.setOnClickListener(this);
         gbutton1.setText("发消息");
 
-        getdata();
+        //getdata();
+        dataget.getdata(userid, new Databack() {
+            @Override
+            public void ongetdata(String id, String name, String age, String sign, String sex, String constellaiton, String career, String areaId, String icon) {
+                guanzhu.this.id=id;
+                guanzhu.this.name=name;
+                guanzhu.this.age=age;
+                guanzhu.this.sign=sign;
+                guanzhu.this.sex=sex;
+                guanzhu.this.constellation=constellation;
+                guanzhu.this.career=career;
+                guanzhu.this.areaId=areaId;
+                guanzhu.this.icon=icon;
+            }
+        });
         juge();
         spref= PreferenceManager.getDefaultSharedPreferences(this);
         gone=findViewById(R.id.gone);
@@ -146,10 +164,40 @@ public class guanzhu extends AppCompatActivity implements View.OnClickListener,M
                 String friend= String.valueOf(gbutton2.getText());
                 if (friend=="添加好友") {
                     Toast.makeText(guanzhu.this, "添加好友", Toast.LENGTH_SHORT).show();
-                    addfriend();
+                    addFriend(userid, new MyCallback() {
+                        @Override
+                        public void onSuccess() {
+
+                        }
+
+                        @Override
+                        public void onFailure(String reason) {
+
+                        }
+
+                        @Override
+                        public void onError(Throwable t) {
+
+                        }
+                    });
                 }
                 else
-                    deletefriend();
+                    deleteFriend(userid, new MyCallback() {
+                        @Override
+                        public void onSuccess() {
+
+                        }
+
+                        @Override
+                        public void onFailure(String reason) {
+
+                        }
+
+                        @Override
+                        public void onError(Throwable t) {
+
+                        }
+                    });
                 break;
         }
     }
@@ -164,40 +212,6 @@ public class guanzhu extends AppCompatActivity implements View.OnClickListener,M
         return true;
     }
 
-    public void getdata(){
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(Net.BaseHost)
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
-        infoResponse.infoService service=retrofit.create(infoResponse.infoService.class);
-        retrofit2.Call<infoResponse>call=service.info(userid);
-        call.enqueue(new Callback<infoResponse>() {
-            @Override
-            public void onResponse(Call<infoResponse> call, Response<infoResponse> response) {
-                if (response.body().getCode()==0) {
-                    id= String.valueOf(response.body().getData().getId());
-                    name = response.body().getData().getInfo().getNickname();
-                    age = String.valueOf(response.body().getData().getInfo().getAge());
-                    sign = response.body().getData().getInfo().getSign();
-                    sex = response.body().getData().getInfo().getSex();
-                    constellation = response.body().getData().getInfo().getConstellation();
-                    career = response.body().getData().getInfo().getCareer();
-                    areaId = String.valueOf(response.body().getData().getInfo().getArea_id());
-                    icon = response.body().getData().getInfo().getIcon_base64();
-                    gt2.setText(sign);
-                    stringToBitmap(icon,opicture);
-                }
-                else {
-
-                }
-            }
-
-            @Override
-            public void onFailure(Call<infoResponse> call, Throwable t) {
-                t.printStackTrace();
-            }
-        });
-    }
     public void juge(){
         spref=PreferenceManager.getDefaultSharedPreferences(this);
         String logToken = AccountUtils.getLogToken();
@@ -229,7 +243,7 @@ public class guanzhu extends AppCompatActivity implements View.OnClickListener,M
                         gbutton2.setText("添加好友");
                     }
                     else
-                        gbutton2.setText("添加好友");
+                        gbutton2.setText("连接失败");
                 }
 
                 @Override
@@ -238,85 +252,6 @@ public class guanzhu extends AppCompatActivity implements View.OnClickListener,M
                 }
             });
         }
-    }
-    public void addfriend(){
-        spref=PreferenceManager.getDefaultSharedPreferences(this);
-        String logToken = spref.getString("logToken", null);
-        //String userid=spref.getString("userId",null);
-        String userid="10002";
-        if (logToken == "null") {    //其实还要判断logToken是否失效
-            runOnUiThread(() -> {
-                Toast.makeText(guanzhu.this, "请先登录", Toast.LENGTH_SHORT).show();
-            });
-        } else{
-            Retrofit retrofit = new Retrofit.Builder()
-                    .baseUrl(Net.BaseHost)
-                    .addConverterFactory(GsonConverterFactory.create())
-                    .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
-                    .build();
-            MyResponse.addService service=retrofit.create(MyResponse.addService.class);
-            retrofit2.Call<MyResponse>call=service.add(Integer.parseInt(userid),logToken);
-            call.enqueue(new Callback<MyResponse>() {
-                @Override
-                public void onResponse(Call<MyResponse> call, Response<MyResponse> response) {
-                    if (response.body().getCode()==0)
-                        Log.d("haoyou","添加成功");
-                }
-
-                @Override
-                public void onFailure(Call<MyResponse> call, Throwable t) {
-                    t.printStackTrace();
-                }
-            });
-        }
-    }
-    public void deletefriend(){
-        spref=PreferenceManager.getDefaultSharedPreferences(this);
-        String logToken = spref.getString("logToken", null);
-        //String userid=spref.getString("userId",null);
-        String userid="10006";
-        if (logToken == "null") {    //其实还要判断logToken是否失效
-            runOnUiThread(() -> {
-                Toast.makeText(guanzhu.this, "请先登录", Toast.LENGTH_SHORT).show();
-            });
-        } else{
-            Retrofit retrofit = new Retrofit.Builder()
-                    .baseUrl(Net.BaseHost)
-                    .addConverterFactory(GsonConverterFactory.create())
-                    .build();
-            MyResponse.deleteService service=retrofit.create(MyResponse.deleteService.class);
-            retrofit2.Call<MyResponse>call=service.delete(Integer.parseInt(userid),logToken);
-            call.enqueue(new Callback<MyResponse>() {
-                @Override
-                public void onResponse(Call<MyResponse> call, Response<MyResponse> response) {
-                    if (response.body().getCode()==0)
-                        Log.d("haoyou","添加成功");
-                }
-
-                @Override
-                public void onFailure(Call<MyResponse> call, Throwable t) {
-
-                }
-            });
-        }
-    }
-    public static boolean generateImage(String imgStr,String path)throws IOException {
-        if (imgStr==null){
-            return false;
-        }
-        BASE64Decoder decoder=new BASE64Decoder();
-        byte[] b=decoder.decodeBuffer(imgStr);
-
-        for (int i=0;i<b.length;i++){
-            if (b[i]<0){
-                b[i]+=256;
-            }
-        }
-        OutputStream out=new FileOutputStream(path);
-        out.write(b);
-        out.flush();
-        out.close();
-        return true;
     }
     public static Bitmap stringToBitmap(String string,ImageView imageView){
         Bitmap bitmap=null;

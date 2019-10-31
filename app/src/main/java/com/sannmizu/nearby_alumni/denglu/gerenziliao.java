@@ -4,7 +4,6 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.view.MenuItem;
-import android.widget.EditText;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
@@ -13,7 +12,6 @@ import androidx.appcompat.widget.Toolbar;
 
 import com.sannmizu.nearby_alumni.R;
 
-import java.util.ArrayList;
 
 public class gerenziliao extends AppCompatActivity {
     MyOneLineView ziliao1,ziliao2,ziliao3,ziliao4,ziliao5,ziliao6,ziliao7;

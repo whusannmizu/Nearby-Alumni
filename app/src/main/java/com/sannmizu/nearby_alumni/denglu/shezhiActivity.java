@@ -141,9 +141,6 @@ public class shezhiActivity extends AppCompatActivity implements MyOneLineView.O
             else if ("file".equalsIgnoreCase(uri.getScheme())){
                 background=uri.getPath();
             }
-            /*seditor.putString("imagepath",imagePath);
-            seditor.apply();*/
-            //displayImage(imagePath);
     }
     private String getImagePath(Uri uri,String selection){
         String path=null;
@@ -167,9 +164,6 @@ public class shezhiActivity extends AppCompatActivity implements MyOneLineView.O
                 seditor.putString("nicheng",snicheng);
                 seditor.putString("background",background);
                 seditor.apply();
-                /*Intent intent=new Intent(this,MainActivity.class);
-                intent.setType(imagePath);
-                startActivity(intent);*/
                 finish();
                 break;
                 default:
@@ -177,14 +171,5 @@ public class shezhiActivity extends AppCompatActivity implements MyOneLineView.O
         }
         return true;
     }
-    /*private void displayImage(String imagepath){
-        if (imagepath!=null){
-            Bitmap bitmap= BitmapFactory.decodeFile(imagepath);
-            spicture.setImageBitmap(bitmap);
-        }
-        else {
-            Toast.makeText(this,"failed to get image",Toast.LENGTH_SHORT).show();
-        }
-    }*/
 }
 

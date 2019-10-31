@@ -38,6 +38,7 @@ import com.sannmizu.nearby_alumni.NetUtils.MyResponse;
 import com.sannmizu.nearby_alumni.NetUtils.Net;
 import com.sannmizu.nearby_alumni.R;
 import com.sannmizu.nearby_alumni.utils.AESUtils;
+import com.sannmizu.nearby_alumni.utils.AccountUtils;
 import com.sannmizu.nearby_alumni.utils.encoder.BASE64Encoder;
 
 import org.litepal.LitePal;
@@ -71,6 +72,8 @@ public class PersonalActivity extends AppCompatActivity implements MyOneLineView
     private ArrayList<String>citylist=new ArrayList<>();
     private ArrayList<String>Arealist=new ArrayList<>();
     private String selectText="";
+    private String mingzi,nianling,xingbie,xingzuo,zhiye,diqu,youxiang,qianming;
+    int areaId,age;
     String me;
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -92,29 +95,35 @@ public class PersonalActivity extends AppCompatActivity implements MyOneLineView
         peightitem=(MyOneLineView)findViewById(R.id.peight_item);
         pnightitem=findViewById(R.id.pnight_item);
         spref= PreferenceManager.getDefaultSharedPreferences(this);
+        int userid=AccountUtils.getCurrentUserId();
+        dataget.getdata(userid, new Databack() {
+            @Override
+            public void ongetdata(String id, String name, String age, String sign, String sex, String constellaiton, String career, String areaId, String icon) {
+                PersonalActivity.this.mingzi=name;
+                PersonalActivity.this.nianling=age;
+                PersonalActivity.this.xingbie=sex;
+                PersonalActivity.this.xingzuo=constellaiton;
+                PersonalActivity.this.zhiye=career;
+                PersonalActivity.this.diqu=areaId;
+                PersonalActivity.this.qianming=sign;
+            }
+        });
+        youxiang=spref.getString("youxiang","");
         poneitem.initItemWidthEdit(R.drawable.ic_xingming,"姓名","请输入你的名字");
-        String mingzi=spref.getString("mingzi","");
         poneitem.setEditContent(mingzi);
         ptwoitem.initItemWidthEdit1(R.drawable.ic_nianling,"年龄","请设置你的年龄").setOnArrowClickListener(this,3);
-        String nianling=spref.getString("nianling","");
         ptwoitem.setEditContent(nianling);
         pthreeitem.initItemWidthEdit1(R.drawable.ic_xingbie,"性别","请判断你的性别").setOnArrowClickListener(this,4);
-        String xingbie=spref.getString("xingbie","");
         pthreeitem.setEditContent(xingbie);
         pfouritem.initItemWidthEdit1(R.drawable.ic__xingzuoyuncheng,"星座","请输入你的星座").setOnArrowClickListener(this,2);
-        String xingzuo=spref.getString("xingzuo",null);
         pfouritem.setEditContent(xingzuo);
         pfiveitem.initItemWidthEdit1(R.drawable.ic_zhiye,"职业","请选择你的职业").setOnArrowClickListener(this,5);
-        String zhiye=spref.getString("zhiye","");
         pfiveitem.setEditContent(zhiye);
         psixitem.initItemWidthEdit1(R.drawable.ic_diqu,"地区","请输入你的地区ID（6位）").setOnArrowClickListener(this,6);
-        String diqu=spref.getString("diqu","");
         psixitem.setEditContent(diqu);
         psevenitem.initItemWidthEdit(R.drawable.ic_youxiang,"邮箱","请输入你的邮箱");
-        String youxiang=spref.getString("youxiang","");
         psevenitem.setEditContent(youxiang);
         peightitem.initItemWidthEdit(R.drawable.ic_qianming,"签名","请输入个性签名");
-        String qianming=spref.getString("qianming","");
         peightitem.setEditContent(qianming);
         pnightitem.initItemWidthEdit(R.drawable.ic_tuxiang,"头像","请选择你的头像")
         .setOnArrowClickListener(this,1);
@@ -323,25 +332,6 @@ public class PersonalActivity extends AppCompatActivity implements MyOneLineView
                 break;
             case R.id.save:
                 spref=PreferenceManager.getDefaultSharedPreferences(this);
-                String mingzi=poneitem.getEditContent();
-                String nianling=ptwoitem.getEditContent();
-                String xingbie=pthreeitem.getEditContent();
-                String xingzuo=pfouritem.getEditContent();
-                String zhiye=pfiveitem.getEditContent();
-                String diqu=psixitem.getEditContent();
-                String youxiang=psevenitem.getEditContent();
-                String qianming=peightitem.getEditContent();
-                seditor=spref.edit();
-                seditor.putString("mingzi",mingzi);
-                seditor.putString("nianling",nianling);
-                seditor.putString("xingbie",xingbie);
-                seditor.putString("xingzuo",xingzuo);
-                seditor.putString("zhiye",zhiye);
-                seditor.putString("diqu",diqu);
-                seditor.putString("youxiang",youxiang);
-                seditor.putString("qianming",qianming);
-                seditor.putString("imagepath",imagePath);
-                seditor.apply();
                 shangchuan();
                 default:
                     break;
@@ -459,32 +449,44 @@ public class PersonalActivity extends AppCompatActivity implements MyOneLineView
     }
 
     public void shangchuan(){
-        spref= PreferenceManager.getDefaultSharedPreferences(this);
-        String logToken = spref.getString("logToken", null);
-        String connToken = spref.getString("connToken", null);
-        String name=spref.getString("mingzi",null);
-        int age= Integer.parseInt(spref.getString("nianling",null));
-        String sign=spref.getString("qianming",null);
-        String sex=spref.getString("xingbie",null);
-        String constellation=spref.getString("xingzuo",null);
-        String career=spref.getString("zhiye",null);
-        int areaId= Integer.parseInt(spref.getString("diqu",null));
-        String email=spref.getString("youxiang",null);
-        //String icon=spref.getString("imagepath",null);
+        String logToken=AccountUtils.getLogToken();
+        String connToken=AccountUtils.getConnToken();
+        mingzi=poneitem.getEditContent();
+        nianling=ptwoitem.getEditContent().toString().trim();
+        if (nianling.length()==0)
+        {
+            age= 0;
+        }
+        else {
+            age=Integer.parseInt(nianling);
+        }
+        xingbie=pthreeitem.getEditContent();
+        xingzuo=pfouritem.getEditContent();
+        zhiye=pfiveitem.getEditContent();
+        diqu=psixitem.getEditContent().toString().trim();
+        if (diqu.length()==0)
+        {
+            areaId=000000;
+        }
+        else {
+            areaId=Integer.parseInt(diqu);
+        }
+        youxiang=psevenitem.getEditContent();
+        qianming=peightitem.getEditContent();
         String icon1=spref.getString("imagepath",null);
         String icon= null;
         if (icon1!=null) {
             icon = bitmapToString(icon1);
         }
         JsonObject requestData=new JsonObject();
-        requestData.addProperty("name",name);
-        requestData.addProperty("sign",sign);
-        requestData.addProperty("sex",sex);
+        requestData.addProperty("name",mingzi);
+        requestData.addProperty("sign",xingbie);
+        requestData.addProperty("sex",xingbie);
         requestData.addProperty("icon",icon);
         requestData.addProperty("areaId",areaId);
         requestData.addProperty("age",age);
-        requestData.addProperty("constellation",constellation);
-        requestData.addProperty("career",career);
+        requestData.addProperty("constellation",xingzuo);
+        requestData.addProperty("career",zhiye);
         JsonObject requestRoot=new JsonObject();
         requestRoot.add("info",requestData);
         //requestData.addProperty("email",email);
@@ -562,7 +564,8 @@ public class PersonalActivity extends AppCompatActivity implements MyOneLineView
 
         // Calculate inSampleSize
         //options.inSampleSize = calculateInSampleSize(options, 480, 800);
-        options.inSampleSize=10;
+        options.inSampleSize=15;
+        //图片压缩的倍率
         // Decode bitmap with inSampleSize set
         options.inJustDecodeBounds = false;
 
@@ -579,24 +582,4 @@ public class PersonalActivity extends AppCompatActivity implements MyOneLineView
         return Base64.encodeToString(b, Base64.DEFAULT);
     }
 
-    /*public static boolean generateImage(String imgStr,String path)throws IOException {
-        if (imgStr==null){
-            return false;
-        }
-        BASE64Decoder decoder=new BASE64Decoder();
-        byte[] b=decoder.decodeBuffer(imgStr);
-
-        for (int i=0;i<b.length;++i){
-            if (b[i]<0){
-                b[i]+=256;
-            }
-        }
-
-        String filename= String.format("%s.jpg", this.createGUIDService.getGUID());
-        OutputStream out=new FileOutputStream(path);
-        out.write(b);
-        out.flush();
-        out.close();
-        return true;
-    }*/
 }
