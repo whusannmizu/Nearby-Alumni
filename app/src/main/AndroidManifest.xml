@@ -13,6 +13,7 @@
     <uses-permission android:name="android.permission.VIBRATE" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
     <uses-permission android:name="android.permission.RECORD_AUDIO"/>
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
 
     <permission
         android:name="com.sannmizu.nearby_alumni.permission.MIPUSH_RECEIVE"
@@ -30,8 +31,8 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <meta-data
-            android:name="com.sannmizu.nearby_alumni"
-            android:value="4PpX2Cz1Dd9lW86t9mjCaDXC5nRAYvz9"/>
+            android:name="com.baidu.android.lbs.API_KEY"
+            android:value="idNOzoRW1UpYUu0xNl1LPDG8vtG4Tuj2"/>
         <service android:name="com.baidu.location.f"
             android:enabled="true"
             android:process=":remote">
@@ -70,14 +71,6 @@
             android:windowSoftInputMode="stateHidden|adjustResize">
         </activity>
         <activity android:name=".denglu.ForgetPwdActivity"
-            android:configChanges="keyboardHidden|orientation"
-            android:label="密码找回"
-            android:launchMode="singleTop"
-            android:screenOrientation="portrait"
-            android:theme="@style/Account_Base.App.Theme.NoTitle"
-            android:windowSoftInputMode="stateHidden|adjustResize">
-        </activity>
-        <activity android:name=".denglu.ChangePwdActivity"
             android:configChanges="keyboardHidden|orientation"
             android:label="密码找回"
             android:launchMode="singleTop"
@@ -129,6 +122,16 @@
             android:theme="@style/AppTheme"
             android:windowSoftInputMode="adjustPan|stateHidden"
             android:label="备注"/>
+        <activity android:name=".denglu.about"
+            android:launchMode="singleTop"
+            android:theme="@style/AppTheme"
+            android:windowSoftInputMode="adjustPan|stateHidden"
+            android:label="关于"/>
+        <activity android:name=".denglu.Help"
+            android:launchMode="singleTop"
+            android:theme="@style/AppTheme"
+            android:windowSoftInputMode="adjustPan|stateHidden"
+            android:label="帮助"/>
         <service
             android:name="com.xiaomi.push.service.XMPushService"
             android:enabled="true"

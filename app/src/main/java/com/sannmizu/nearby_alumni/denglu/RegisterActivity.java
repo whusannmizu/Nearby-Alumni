@@ -40,7 +40,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
     private SharedPreferences pref;
     private SharedPreferences.Editor editor;
     public static List<String> logList = new CopyOnWriteArrayList<String>();
-    private Button register_submit,mimacall;
+    private Button register_submit;
     private CheckBox checkBox;
     private EditText telEdit,nicknameEdit,pwdEdit;
     private static String appkey ="2c1f47c68d00d";
@@ -61,8 +61,6 @@ private void initView(){
         pwdEdit =findViewById(R.id.et_register_pwd_input);
         telEdit =findViewById(R.id.et_register_username);
         telEdit.addTextChangedListener(this);
-        mimacall=(Button)findViewById(R.id.tv_register_sms_call);
-        mimacall.setOnClickListener(this);
         register_submit.setClickable(false);
         checkBox=(CheckBox)findViewById(R.id.cb_protocol);
         checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
@@ -81,15 +79,6 @@ private void initView(){
             case R.id.bt_register_submit:
                 //sendmessage();
                 sendRequestWithOkHttp();
-                break;
-            case R.id.tv_register_sms_call:
-                /*try {
-                    SendCode();
-                    Log.d("RegisterActivity","mima");
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }*/
-                //sendmessage();
                 break;
         }
     }
@@ -121,7 +110,7 @@ private void initView(){
         boolean isphone=isphone(haoma);
         boolean isemail=isemail(haoma);
         if (isphone==true||isemail==true)
-            mimacall.setClickable(true);
+           register_submit.setClickable(true);
     }
     private void sendRequestWithOkHttp(){
                     String timestamp = Long.toString(new Date().getTime() / 1000);
