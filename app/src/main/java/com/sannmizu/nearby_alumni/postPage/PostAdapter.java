@@ -1,5 +1,6 @@
 package com.sannmizu.nearby_alumni.postPage;
 
+import android.content.Intent;
 import android.graphics.BitmapFactory;
 import android.util.Base64;
 import android.view.LayoutInflater;
@@ -19,6 +20,7 @@ import com.sannmizu.nearby_alumni.NetUtils.User;
 import com.sannmizu.nearby_alumni.NetUtils.UserSearchResponse;
 import com.sannmizu.nearby_alumni.R;
 import com.sannmizu.nearby_alumni.cacheUtils.MyBitmapUtils;
+import com.sannmizu.nearby_alumni.denglu.guanzhu;
 
 import java.util.List;
 
@@ -136,6 +138,11 @@ public class PostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                 }
             } else {
                 ((PostHolder)holder).avatar.setImageBitmap(object.getAvatar());
+            }
+            if(!((PostHolder)holder).avatar.hasOnClickListeners()) {
+                ((PostHolder)holder).avatar.setOnClickListener(v->{
+                    guanzhu.actionStart(v.getContext(), object.getUserId());
+                });
             }
         } else if (holder instanceof FooterHolder) {
             String say = "加载出错";

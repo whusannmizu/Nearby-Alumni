@@ -1,9 +1,13 @@
 package com.sannmizu.nearby_alumni.NetUtils;
 
+import android.util.Log;
+
 import com.google.gson.annotations.SerializedName;
 import com.sannmizu.nearby_alumni.utils.AccountUtils;
 
 import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 import retrofit2.http.PUT;
@@ -11,7 +15,7 @@ import retrofit2.http.Query;
 
 public class LocateResponse extends MyResponse<LocateResponse.LocateData>{
     public static interface LocateService{
-        @PUT("app/Locate")
+        @PUT("app/locate")
         Call<MyResponse> locate(@Query("latitude")String latitude, @Query("longitude")String longitude, @Query("logToken")String logToken);
     }
     public static LocateService generateService() {
@@ -22,16 +26,21 @@ public class LocateResponse extends MyResponse<LocateResponse.LocateData>{
         return retrofit.create(LocateService.class);
     }
     public static void update(String latitude, String longitude) {
-        new Thread(new Runnable() {
+        generateService().locate(latitude, longitude, AccountUtils.getLogToken()).enqueue(new Callback<MyResponse>() {
             @Override
-            public void run() {
-                try {
-                    generateService().locate(AccountUtils.getLogToken(), latitude, longitude).execute();
-                } catch (Exception e) {
-                    e.printStackTrace();
+            public void onResponse(Call<MyResponse> call, Response<MyResponse> response) {
+                if(response.body().getCode() == 0) {
+                    Log.i("sannmizu.locate", "上传位置成功");
+                } else {
+                    Log.i("sannmizu.locate", "上传位置失败：" + response.body().getReason());
                 }
             }
-        }).start();
+
+            @Override
+            public void onFailure(Call<MyResponse> call, Throwable t) {
+                Log.i("sannmizu.locate", "上传位置失败：" + t.getMessage());
+            }
+        });
     }
     public static class LocateData{
         @SerializedName("logToken")

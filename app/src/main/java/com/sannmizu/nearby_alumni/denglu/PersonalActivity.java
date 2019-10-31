@@ -356,19 +356,19 @@ public class PersonalActivity extends AppCompatActivity implements MyOneLineView
                     openAlbum();
                 break;
             case 2:
-                showDialog(constelltionlist,3,pfouritem);
+                showDialog(constelltionlist,0,pfouritem);
                 break;
             case 3:
-                showDialog(agelist,18,ptwoitem);
+                showDialog(agelist,17,ptwoitem);
                 break;
             case 4:
-                showDialog(sexlist,3,pthreeitem);
+                showDialog(sexlist,0,pthreeitem);
                 break;
             case 5:
-                showDialog(careerlist,2,pfiveitem);
+                showDialog(careerlist,0,pfiveitem);
                 break;
             case 6:
-                selectprovince(provincelist,10,psixitem,new WheelView.OnWheelViewListener(){
+                selectprovince(provincelist,0,psixitem,new WheelView.OnWheelViewListener(){
                     @Override
                     public void onSelected(int selectedIndex, String item) {
                         selectText = item;
@@ -403,7 +403,9 @@ public class PersonalActivity extends AppCompatActivity implements MyOneLineView
         super.onActivityResult(requestCode, resultCode, data);
         switch (requestCode){
             case CHOOSE_PHOTO:
-                handleImageOnKitKat(data);
+                if(resultCode == RESULT_OK) {
+                    handleImageOnKitKat(data);
+                }
                 break;
             default:
                 break;
@@ -466,7 +468,7 @@ public class PersonalActivity extends AppCompatActivity implements MyOneLineView
         diqu=psixitem.getEditContent().toString().trim();
         if (diqu.length()==0)
         {
-            areaId=000000;
+            areaId=0;
         }
         else {
             areaId=Integer.parseInt(diqu);
@@ -491,7 +493,7 @@ public class PersonalActivity extends AppCompatActivity implements MyOneLineView
         requestRoot.add("info",requestData);
         //requestData.addProperty("email",email);
 
-        if(logToken == "null") {    //其实还要判断logToken是否失效
+        if(logToken.equals("null")) {    //其实还要判断logToken是否失效
             runOnUiThread(()->{
                 Toast.makeText(PersonalActivity.this, "请先登录", Toast.LENGTH_SHORT).show();
             });
@@ -524,7 +526,6 @@ public class PersonalActivity extends AppCompatActivity implements MyOneLineView
                     });
                 });
             }
-            //locateActivity.instance.getlocate(this);
         }
     }
 
@@ -563,8 +564,8 @@ public class PersonalActivity extends AppCompatActivity implements MyOneLineView
         BitmapFactory.decodeFile(filePath, options);
 
         // Calculate inSampleSize
-        //options.inSampleSize = calculateInSampleSize(options, 480, 800);
-        options.inSampleSize=15;
+        options.inSampleSize = calculateInSampleSize(options, 200, 200);
+        //options.inSampleSize=15;
         //图片压缩的倍率
         // Decode bitmap with inSampleSize set
         options.inJustDecodeBounds = false;

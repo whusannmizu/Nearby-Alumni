@@ -36,6 +36,7 @@ import com.sannmizu.nearby_alumni.utils.encoder.BASE64Decoder;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.util.StringTokenizer;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -82,7 +83,10 @@ public class guanzhu extends AppCompatActivity implements View.OnClickListener,M
         gbutton2=findViewById(R.id.gbutton2);
         gbutton2.setOnClickListener(this);
         gbutton1.setText("发消息");
-
+        if(userid == AccountUtils.getCurrentUserId()) {
+            gbutton1.setVisibility(View.GONE);
+            gbutton2.setVisibility(View.GONE);
+        }
         //getdata();
         dataget.getdata(userid, new Databack() {
             @Override
@@ -92,10 +96,12 @@ public class guanzhu extends AppCompatActivity implements View.OnClickListener,M
                 guanzhu.this.age=age;
                 guanzhu.this.sign=sign;
                 guanzhu.this.sex=sex;
-                guanzhu.this.constellation=constellation;
+                guanzhu.this.constellation=constellaiton;
                 guanzhu.this.career=career;
                 guanzhu.this.areaId=areaId;
                 guanzhu.this.icon=icon;
+                gt2.setText(sign);
+                stringToBitmap(icon, opicture);
             }
         });
         juge();
@@ -114,8 +120,6 @@ public class guanzhu extends AppCompatActivity implements View.OnClickListener,M
         gt1.setText(R.string.qianming);
         gt2=findViewById(R.id.gt2);
 
-        if (sign!=null)
-            gt2.setText(sign);
         String text1=spref.getString("note",null);
         if (text1!=null)
         {
@@ -167,17 +171,17 @@ public class guanzhu extends AppCompatActivity implements View.OnClickListener,M
                     addFriend(userid, new MyCallback() {
                         @Override
                         public void onSuccess() {
-
+                            Toast.makeText(guanzhu.this, "申请成功", Toast.LENGTH_SHORT).show();
                         }
 
                         @Override
                         public void onFailure(String reason) {
-
+                            Toast.makeText(guanzhu.this, "申请失败", Toast.LENGTH_SHORT).show();
                         }
 
                         @Override
                         public void onError(Throwable t) {
-
+                            Toast.makeText(guanzhu.this, "申请失败", Toast.LENGTH_SHORT).show();
                         }
                     });
                 }
@@ -253,16 +257,16 @@ public class guanzhu extends AppCompatActivity implements View.OnClickListener,M
             });
         }
     }
-    public static Bitmap stringToBitmap(String string,ImageView imageView){
+    public static void stringToBitmap(String string,ImageView imageView){
         Bitmap bitmap=null;
-        try
-        {
-            byte[] bitmapArray= Base64.decode(string.split(",")[1],Base64.DEFAULT);
-            bitmap=BitmapFactory.decodeByteArray(bitmapArray,0,bitmapArray.length);
-        }catch (Exception e){
-            e.printStackTrace();
+        if(string != null && string.equals("")) {
+            try {
+                byte[] bitmapArray = Base64.decode(string.split(",")[1], Base64.DEFAULT);
+                bitmap = BitmapFactory.decodeByteArray(bitmapArray, 0, bitmapArray.length);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            imageView.setImageBitmap(bitmap);
         }
-        imageView.setImageBitmap(bitmap);
-        return bitmap;
     }
 }

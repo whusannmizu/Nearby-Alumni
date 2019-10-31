@@ -90,14 +90,18 @@
             android:theme="@style/Account_Base.App.Theme.NoTitle"
             android:windowSoftInputMode="stateHidden|adjustResize">
         </activity>
-        <activity android:name=".denglu.ChangePwdActivity"
-            android:configChanges="keyboardHidden|orientation"
-            android:label="密码找回"
+        <activity android:name=".denglu.about"
             android:launchMode="singleTop"
+            android:label="关于"
             android:screenOrientation="portrait"
-            android:theme="@style/Account_Base.App.Theme.NoTitle"
-            android:windowSoftInputMode="stateHidden|adjustResize">
-        </activity>
+            android:windowSoftInputMode="stateHidden|adjustPan"
+            android:theme="@style/AppTheme"/>
+        <activity android:name=".denglu.Help"
+            android:launchMode="singleTop"
+            android:label="帮助"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateHidden|adjustPan"
+            android:theme="@style/AppTheme"/>
         <activity android:name=".denglu.PersonalActivity"
             android:launchMode="singleTop"
             android:label="个人资料"

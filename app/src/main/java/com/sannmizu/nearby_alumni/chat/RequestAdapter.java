@@ -65,7 +65,7 @@ public class RequestAdapter extends RecyclerView.Adapter<RequestAdapter.RequestH
         }
         if(!holder.userImage.hasOnClickListeners()) {
             holder.userImage.setOnClickListener(v->{
-                //guanzhu.actionStart(v.getContext(), user.getId());
+                guanzhu.actionStart(v.getContext(), user.getId());
             });
         }
         if(!holder.agree.hasOnClickListeners()) {

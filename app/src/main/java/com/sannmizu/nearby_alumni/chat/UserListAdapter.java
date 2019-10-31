@@ -108,7 +108,7 @@ public class UserListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                 }
                 if(!holder.itemView.hasOnClickListeners()) {
                     holder.itemView.setOnClickListener(v -> {
-                        //guanzhu.actionStart(v.getContext(), friend.getId());
+                        guanzhu.actionStart(v.getContext(), friend.getId());
                     });
                 }
             }

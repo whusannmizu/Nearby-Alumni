@@ -3,7 +3,7 @@ package com.sannmizu.nearby_alumni.NetUtils;
 import com.google.gson.annotations.SerializedName;
 
 public class PostInfo {
-    @SerializedName("author")
+    @SerializedName("authorId")
     private int author_id;          //作者id
     @SerializedName("authorName")
     private String author_name;     //作者名字

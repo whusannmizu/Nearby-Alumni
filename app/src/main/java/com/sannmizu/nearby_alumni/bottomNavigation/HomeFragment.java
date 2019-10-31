@@ -195,7 +195,7 @@ public class HomeFragment extends Fragment {
                 }
                 Log.i("sannmizu.blog","定位成功");
                 //2.上传当前位置
-             //   LocateResponse.update(latitude, longitude);
+                LocateResponse.update(latitude, longitude);
                 //3.找到所有附近的动态的id,用拉取到的id获取动态内容
                 pullPost(mTimestamp, 1);
                 //4.转换格式存到mPostList中
