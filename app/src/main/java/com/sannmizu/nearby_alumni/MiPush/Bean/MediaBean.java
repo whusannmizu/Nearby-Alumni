@@ -1,10 +1,17 @@
 package com.sannmizu.nearby_alumni.MiPush.Bean;
 
+import com.google.gson.Gson;
+
 import java.util.List;
 
 public class MediaBean {
     private String root;
     private List<String> files;
+
+    public static MediaBean toBean(String s) {
+        Gson gson = new Gson();
+        return gson.fromJson(s, MediaBean.class);
+    }
 
     public String getRoot() {
         return root;

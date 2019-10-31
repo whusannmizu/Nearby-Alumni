@@ -25,6 +25,7 @@ import com.sannmizu.nearby_alumni.NetUtils.ConnectResponse;
 import com.sannmizu.nearby_alumni.NetUtils.LoginResponse;
 import com.sannmizu.nearby_alumni.NetUtils.Net;
 import com.sannmizu.nearby_alumni.R;
+import com.sannmizu.nearby_alumni.bottomNavigation.MineFragment;
 import com.sannmizu.nearby_alumni.utils.JsonConverterFactory;
 import com.sannmizu.nearby_alumni.utils.MD5Utils;
 import com.sannmizu.nearby_alumni.utils.RSAUtils;
@@ -316,7 +317,7 @@ public class LandingActivity extends AppCompatActivity implements View.OnClickLi
                             editor.putString(LandingActivity.this.getString(R.string.connect_aes_iv), connectResponse.getData().getAes().getIv());
                             editor.putString("connToken", connectResponse.getData().getToken().getValue());
                             editor.apply();
-                            startActivity(new Intent(LandingActivity.this, MyActivity.class));
+                            finish();
                         } else {
                             LandingActivity.logList.add("私密连接失败："+connectResponse.getReason());
                         }
@@ -325,12 +326,12 @@ public class LandingActivity extends AppCompatActivity implements View.OnClickLi
                     @Override
                     public void onError(Throwable e) {
                         LandingActivity.logList.add("登录失败："+e.getMessage());
-                        NearbyApplication.getHandler().sendEmptyMessage(1);
+
                     }
 
                     @Override
                     public void onComplete() {
-                        NearbyApplication.getHandler().sendEmptyMessage(1);
+
                     }
                 });
     }

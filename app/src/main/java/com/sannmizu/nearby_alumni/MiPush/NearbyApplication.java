@@ -12,6 +12,7 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.baidu.mapapi.SDKInitializer;
+import com.sannmizu.nearby_alumni.Locate;
 import com.sannmizu.nearby_alumni.utils.SharedPreUtils;
 import com.sannmizu.nearby_alumni.utils.Util;
 import com.xiaomi.channel.commonutils.logger.LoggerInterface;
@@ -48,10 +49,12 @@ public class NearbyApplication extends Application {
         super.onCreate();
         //数据库
         LitePal.initialize(this);
-        SDKInitializer.initialize(getApplicationContext());
         LitePal.getDatabase();
         //Utils
         Util.initialize(this);
+        //Baidu
+        SDKInitializer.initialize(this);
+        Locate.initialize(this);
         // 注册push服务，注册成功后会向MessageReceiver发送广播
         // 可以从MessageReceiver的onCommandResult方法中MiPushCommandMessage对象参数中获取注册信息
         if (shouldInit()) {

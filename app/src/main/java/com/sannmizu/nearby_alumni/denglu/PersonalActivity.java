@@ -123,7 +123,6 @@ public class PersonalActivity extends AppCompatActivity implements MyOneLineView
         pnightitem.setRightIconSize(30,30);
         //findViewById(R.id.ib_navigation_back).setOnClickListener(this);
         initData();
-        ActivityCollector.addActivity(this);
     }
     private void initData(){
         constelltionlist.clear();
@@ -353,7 +352,6 @@ public class PersonalActivity extends AppCompatActivity implements MyOneLineView
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        ActivityCollector.removeActivity(this);
     }
 
     @Override

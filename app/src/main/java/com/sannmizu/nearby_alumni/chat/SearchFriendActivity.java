@@ -25,7 +25,7 @@ import com.sannmizu.nearby_alumni.NetUtils.RequestsResponse;
 import com.sannmizu.nearby_alumni.NetUtils.User;
 import com.sannmizu.nearby_alumni.NetUtils.UserSearchResponse;
 import com.sannmizu.nearby_alumni.R;
-import com.sannmizu.nearby_alumni.utils.Utils;
+import com.sannmizu.nearby_alumni.utils.AccountUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -70,7 +70,7 @@ public class SearchFriendActivity extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
         //initRequestList();
-        RequestsResponse.generateService().getRequestList(Utils.getLogToken())
+        RequestsResponse.generateService().getRequestList(AccountUtils.getLogToken())
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(response->{
@@ -213,7 +213,7 @@ public class SearchFriendActivity extends AppCompatActivity {
 
         Observable.merge(userFromTelAndName, userFromId)
                 .filter( s -> s.matches("[0-9]+"))
-                .observeOn(Schedulers.io())
+                .subscribeOn(Schedulers.io())
                 .flatMap(new Function<String, ObservableSource<MyResponse<User>>>() {
                     @Override
                     public ObservableSource<MyResponse<User>> apply(String s) throws Exception {

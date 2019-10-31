@@ -30,7 +30,6 @@ public class gerenziliao extends AppCompatActivity {
         if(actionBar!=null){
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
-        ActivityCollector.addActivity(this);
         ziliao1=findViewById(R.id.ziliao1);
         ziliao2=findViewById(R.id.ziliao2);
         ziliao3=findViewById(R.id.ziliao3);
@@ -67,7 +66,6 @@ public class gerenziliao extends AppCompatActivity {
         switch (item.getItemId()) {
             case android.R.id.home:
                 finish();
-                ActivityCollector.removeActivity(this);
                 break;
         }
         return true;

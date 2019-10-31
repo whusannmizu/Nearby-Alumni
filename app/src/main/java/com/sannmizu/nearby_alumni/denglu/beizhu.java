@@ -45,7 +45,6 @@ public class beizhu extends AppCompatActivity {
        switch (item.getItemId()){
            case android.R.id.home:
                finish();
-               ActivityCollector.removeActivity(this);
                break;
            case R.id.save:
                String note=bet1.getText().toString();
@@ -55,7 +54,6 @@ public class beizhu extends AppCompatActivity {
                 seditor.putString("describe",describe);
                 seditor.apply();
                 finish();
-               ActivityCollector.removeActivity(this);
                break;
        }
        return true;

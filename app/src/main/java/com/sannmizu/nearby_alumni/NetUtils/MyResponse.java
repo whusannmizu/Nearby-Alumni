@@ -26,8 +26,8 @@ public class MyResponse<T> {
         Call<MyResponse> info(@Field("newInfo") String newInfo, @Query("logToken")String logToken, @Query("connToken")String connToken);
     }
     public static interface locateService{
-        @PUT("app/locate")
-        Call<locateResponse>locate(@Query("latitude")String latitude,@Query("longitude")String longitude,@Query("logToken")String logToken);
+        @PUT("app/Locate")
+        Call<LocateResponse>locate(@Query("latitude")String latitude, @Query("longitude")String longitude, @Query("logToken")String logToken);
     }
     public static interface addService {
         @POST("account/friends/{id}")

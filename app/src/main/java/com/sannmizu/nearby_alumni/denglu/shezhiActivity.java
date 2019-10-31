@@ -27,7 +27,7 @@ import androidx.core.content.ContextCompat;
 
 import com.sannmizu.nearby_alumni.R;
 
-public class shezhiActivity extends AppCompatActivity implements View.OnClickListener,MyOneLineView.OnArrowClickListener{
+public class shezhiActivity extends AppCompatActivity implements MyOneLineView.OnArrowClickListener{
     MyOneLineView soneitem,stwoitem,sthreeitem,sfouritem,sfiveitem;
     private SharedPreferences spref;
     private SharedPreferences.Editor seditor;
@@ -66,41 +66,6 @@ public class shezhiActivity extends AppCompatActivity implements View.OnClickLis
         stwoitem.setEditable(false);
         stwoitem.showArrow(true);
         stwoitem.setRightIconSize(30,30);
-        tuichu.setOnClickListener(this);
-        ActivityCollector.addActivity(this);
-}
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-    }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-    }
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        ActivityCollector.removeActivity(this);
-    }
-
-    @Override
-    protected void onRestart() {
-        super.onRestart();
-    }
-    @Override
-    public void onClick(View view) {
-        switch (view.getId()){
-            case R.id.stuichu:
-                ActivityCollector.finishAll();
-                break;
-        }
     }
 
     @Override
@@ -200,7 +165,6 @@ public class shezhiActivity extends AppCompatActivity implements View.OnClickLis
                 intent.setType(imagePath);
                 startActivity(intent);*/
                 finish();
-                ActivityCollector.removeActivity(this);
                 break;
                 default:
                     break;

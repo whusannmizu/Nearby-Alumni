@@ -23,6 +23,7 @@ public class MyBitmapUtils {
 
     public void disPlay(ImageView ivPic, String url) {
         ivPic.setImageResource(R.drawable.vector_drawable_defaultpicture);
+        if(url == null || url.equals("")) return;
         Bitmap bitmap;
         //内存缓存
         bitmap = mMemoryCacheUtils.getBitmapFromMemory(url);

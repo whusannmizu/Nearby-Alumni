@@ -121,7 +121,6 @@ public class guanzhu extends AppCompatActivity implements View.OnClickListener,M
         switch ((int)view.getTag()){
             case 1:
                 startActivity(new Intent(guanzhu.this,beizhu.class));
-                ActivityCollector.addActivity(this);
                 break;
             case 2:
                 seditor=spref.edit();
@@ -134,7 +133,6 @@ public class guanzhu extends AppCompatActivity implements View.OnClickListener,M
                 seditor.putString("pdiqu",areaId);
                 seditor.apply();
                 startActivity(new Intent(guanzhu.this,gerenziliao.class));
-                ActivityCollector.addActivity(this);
                 break;
         }
     }
@@ -161,7 +159,6 @@ public class guanzhu extends AppCompatActivity implements View.OnClickListener,M
         switch (item.getItemId()){
             case android.R.id.home:
                 finish();
-                ActivityCollector.removeActivity(this);
                 break;
         }
         return true;

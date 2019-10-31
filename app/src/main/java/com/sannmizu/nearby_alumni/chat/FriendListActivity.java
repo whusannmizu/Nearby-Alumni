@@ -17,8 +17,8 @@ import com.sannmizu.nearby_alumni.database.Users;
 import com.sannmizu.nearby_alumni.NetUtils.FriendsResponse;
 import com.sannmizu.nearby_alumni.NetUtils.User;
 import com.sannmizu.nearby_alumni.R;
+import com.sannmizu.nearby_alumni.utils.AccountUtils;
 import com.sannmizu.nearby_alumni.utils.SharedPreUtils;
-import com.sannmizu.nearby_alumni.utils.Utils;
 
 import org.litepal.LitePal;
 
@@ -135,7 +135,7 @@ public class FriendListActivity extends AppCompatActivity {
                 }
             });
 
-            Observable<List<BaseObject>> network = FriendsResponse.generateService().getFriendList(Utils.getLogToken())
+            Observable<List<BaseObject>> network = FriendsResponse.generateService().getFriendList(AccountUtils.getLogToken())
                     .flatMap(new Function<FriendsResponse, ObservableSource<List<BaseObject>>>() {
                         @Override
                         public ObservableSource<List<BaseObject>> apply(FriendsResponse friendsResponse) throws Exception {

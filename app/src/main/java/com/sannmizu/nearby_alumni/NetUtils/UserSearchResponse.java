@@ -16,6 +16,14 @@ import retrofit2.http.Path;
 import retrofit2.http.Query;
 
 public class UserSearchResponse extends MyResponse<UserSearchResponse.UserSearchData>{
+    public static final String Info_Name = "name";
+    public static final String Info_Sign = "sign";
+    public static final String Info_Sex = "sex";
+    public static final String Info_Avatar = "icon";
+    public static final String Info_AreaId = "areaid";
+    public static final String Info_Age = "age";
+    public static final String Info_Constellation = "constellation";
+    public static final String Info_Career = "career";
     public static interface UserSearchService {
         @GET("account/user/search")
         Observable<UserSearchResponse> search(@Query("type")String type, @Query("standard")String standard, @Query("limit")int limit);
@@ -25,6 +33,9 @@ public class UserSearchResponse extends MyResponse<UserSearchResponse.UserSearch
 
         @GET("account/user/{userId}/all")
         Observable<MyResponse<User>> searchById(@Path("userId")String userId);
+
+        @GET("account/user/{userId}/{info}")
+        Observable<MyResponse<User>> searchInfoById(@Path("userId")String userId, @Path("info")String info);
     }
     public static UserSearchService generateService() {
         Retrofit retrofit = new Retrofit.Builder()

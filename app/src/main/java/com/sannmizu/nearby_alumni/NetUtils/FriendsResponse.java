@@ -1,7 +1,7 @@
 package com.sannmizu.nearby_alumni.NetUtils;
 
 import com.google.gson.annotations.SerializedName;
-import com.sannmizu.nearby_alumni.utils.Utils;
+import com.sannmizu.nearby_alumni.utils.AccountUtils;
 
 import java.util.List;
 
@@ -49,7 +49,7 @@ public class FriendsResponse extends MyResponse<FriendsResponse.FriendsData> {
         }
     }
     public static Disposable addFriend(int id, MyCallback callback) {
-        return generateService().addFriend(Utils.getLogToken(), id)
+        return generateService().addFriend(AccountUtils.getLogToken(), id)
                 .subscribeOn(Schedulers.io())
                 .subscribe(response->{
                     if(response.getCode() == 0) {
@@ -62,7 +62,7 @@ public class FriendsResponse extends MyResponse<FriendsResponse.FriendsData> {
                 }, callback::onError );
     }
     public static Disposable deleteFriend(int id, MyCallback callback) {
-        return generateService().deleteFriend(Utils.getLogToken(), id)
+        return generateService().deleteFriend(AccountUtils.getLogToken(), id)
                 .subscribeOn(Schedulers.io())
                 .subscribe(response->{
                     if(response.getCode() == 0) {

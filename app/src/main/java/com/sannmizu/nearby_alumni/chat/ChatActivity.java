@@ -39,8 +39,9 @@ import com.sannmizu.nearby_alumni.database.ChatRecord;
 import com.sannmizu.nearby_alumni.NetUtils.ChatResponse;
 import com.sannmizu.nearby_alumni.R;
 import com.sannmizu.nearby_alumni.cacheUtils.LocalCacheUtils;
+import com.sannmizu.nearby_alumni.utils.AccountUtils;
+import com.sannmizu.nearby_alumni.utils.BitmapUtils;
 import com.sannmizu.nearby_alumni.utils.SharedPreUtils;
-import com.sannmizu.nearby_alumni.utils.Utils;
 
 import org.litepal.LitePal;
 
@@ -427,8 +428,8 @@ public class ChatActivity extends AppCompatActivity {
     }
     private void sendMessage(ChatRecord chatRecord, Long Tag, Bitmap bitmap) {
         String sendValue = ChatResponse.getPictureRequest("png");
-        String picString = getPNGFromBitmapToString(bitmap);
-        ChatResponse.generateService().chat(friend_id, sendValue, picString, Utils.getLogToken(), Utils.getConnToken())
+        String picString = BitmapUtils.getPNGFromBitmapToBase64(bitmap);
+        ChatResponse.generateService().chat(friend_id, sendValue, picString, AccountUtils.getLogToken(), AccountUtils.getConnToken())
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Observer<ChatResponse>() {
@@ -461,17 +462,5 @@ public class ChatActivity extends AppCompatActivity {
                         mRecordAdapter.notifyItemChanged(Tag);
                     }
                 });
-    }
-    private String getPNGFromBitmapToString(Bitmap bitmap) {
-        byte[] bytes;
-        try {
-            ByteArrayOutputStream outStream = new ByteArrayOutputStream();
-            bitmap.compress(Bitmap.CompressFormat.PNG, 100, outStream);
-            bytes = outStream.toByteArray();
-        } catch (Exception e) {
-            e.printStackTrace();
-            return null;
-        }
-        return Base64.encodeToString(bytes, Base64.NO_WRAP);
     }
 }
