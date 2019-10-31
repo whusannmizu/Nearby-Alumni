@@ -42,7 +42,6 @@ public class NearbyApplication extends Application {
     public static final String TAG = "sannmizu.nearby_alumni";
 
     private static DemoHandler sHandler = null;
-    private static InternetDemo sMainActivity = null;
 
     @Override
     public void onCreate() {
@@ -105,10 +104,6 @@ public class NearbyApplication extends Application {
         return sHandler;
     }
 
-    public static void setInternetDemo(InternetDemo activity) {
-        sMainActivity = activity;
-    }
-
     public static class DemoHandler extends Handler {
 
         private Context context;
@@ -119,17 +114,7 @@ public class NearbyApplication extends Application {
 
         @Override
         public void handleMessage(Message msg) {
-            if(msg == null){
-                sMainActivity.refreshLogInfo();
-            } else {
-                String s = (String) msg.obj;
-                if (sMainActivity != null) {
-                    sMainActivity.refreshLogInfo();
-                }
-                if (!TextUtils.isEmpty(s)) {
-                    Toast.makeText(context, s, Toast.LENGTH_LONG).show();
-                }
-            }
+
         }
     }
 }

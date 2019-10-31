@@ -1,5 +1,6 @@
 package com.sannmizu.nearby_alumni.denglu;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
@@ -28,6 +29,7 @@ import com.sannmizu.nearby_alumni.NetUtils.addresponse;
 import com.sannmizu.nearby_alumni.NetUtils.friendResponse;
 import com.sannmizu.nearby_alumni.NetUtils.infoResponse;
 import com.sannmizu.nearby_alumni.R;
+import com.sannmizu.nearby_alumni.utils.AccountUtils;
 import com.sannmizu.nearby_alumni.utils.encoder.BASE64Decoder;
 
 import java.io.FileOutputStream;
@@ -50,12 +52,23 @@ public class guanzhu extends AppCompatActivity implements View.OnClickListener,M
     private TextView gtext1,gtext2,gt1,gt2;
     private Button gbutton1,gbutton2;
     String name,age,sign,sex,constellation,career,areaId,icon1,icon,id;
-    /*Intent intent=getIntent();
-    String userid=intent.getStringExtra("userid");*/
-    int userid=10007;
+    public static void actionStart(Context context, int id) {
+        Intent intent= new Intent(context, guanzhu.class);
+        intent.putExtra("userid", id);
+        context.startActivity(intent);
+    }
+
+    int userid = 0;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        Intent intent = getIntent();
+        userid = intent.getIntExtra("userid", 0);
+        if(userid == 0) {
+            Toast.makeText(this, "无效操作", Toast.LENGTH_SHORT).show();
+            finish();
+        }
         setContentView(R.layout.guanzhu);
         scrollView=(ScrollView)findViewById(R.id.gbeijing);
         opicture=findViewById(R.id.opicture);
@@ -65,7 +78,7 @@ public class guanzhu extends AppCompatActivity implements View.OnClickListener,M
         gbutton2=findViewById(R.id.gbutton2);
         gbutton2.setOnClickListener(this);
         gbutton1.setText("发消息");
-        //gbutton2.setText("添加好友");
+
         getdata();
         juge();
         spref= PreferenceManager.getDefaultSharedPreferences(this);
@@ -82,7 +95,7 @@ public class guanzhu extends AppCompatActivity implements View.OnClickListener,M
         gt1=findViewById(R.id.gt1);
         gt1.setText(R.string.qianming);
         gt2=findViewById(R.id.gt2);
-        //String text3=spref.getString("qianming",null);
+
         if (sign!=null)
             gt2.setText(sign);
         String text1=spref.getString("note",null);
@@ -90,7 +103,6 @@ public class guanzhu extends AppCompatActivity implements View.OnClickListener,M
         {
             gtext1.setText(text1);
         }
-        //String text2=spref.getString("diqu",null);
         if (areaId!=null)
         {
             gtext2.setText(areaId);
@@ -102,18 +114,6 @@ public class guanzhu extends AppCompatActivity implements View.OnClickListener,M
         {
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
-        /*String uri=spref.getString("imagepath",null);
-        if (uri!=null)
-        {
-
-            Bitmap bitmap=BitmapFactory.decodeFile(uri);
-            opicture.setImageBitmap(bitmap);
-        }*/
-        /*String uri1=spref.getString("bing_pic",null);
-        if (uri1!=null)
-        {
-            Glide.with(this).load(uri1).into(obackground);
-        }*/
     }
 
     @Override
@@ -186,11 +186,6 @@ public class guanzhu extends AppCompatActivity implements View.OnClickListener,M
                     icon = response.body().getData().getInfo().getIcon_base64();
                     gt2.setText(sign);
                     stringToBitmap(icon,opicture);
-                    /*try {
-                        generateImage(icon1,icon);
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }*/
                 }
                 else {
 
@@ -205,10 +200,10 @@ public class guanzhu extends AppCompatActivity implements View.OnClickListener,M
     }
     public void juge(){
         spref=PreferenceManager.getDefaultSharedPreferences(this);
-        String logToken = spref.getString("logToken", null);
+        String logToken = AccountUtils.getLogToken();
         //String userid=spref.getString("userId",null);
-        int userid = 10007;
-        if (logToken == "null") {    //其实还要判断logToken是否失效
+        int userid = AccountUtils.getCurrentUserId();
+        if (logToken.equals("")) {    //其实还要判断logToken是否失效
             runOnUiThread(() -> {
                 Toast.makeText(guanzhu.this, "请先登录", Toast.LENGTH_SHORT).show();
             });

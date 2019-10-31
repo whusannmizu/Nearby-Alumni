@@ -62,7 +62,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".MiPush.InternetDemo" />
         <activity android:name=".ChatListActivity" />
         <activity android:name=".chat.FriendListActivity" />
         <activity android:name=".chat.SearchFriendActivity" />

@@ -104,8 +104,12 @@ public class HomeFragment extends Fragment {
         mToolbar.setOnMenuItemClickListener(item -> {
             switch (item.getItemId()) {
                 case R.id.send_post:
+                    if(AccountUtils.getLocked()) {
+                        AccountUtils.requestLogin(getContext());
+                        return true;
+                    }
                     Intent intent = new Intent(getContext(), SendPostActivity.class);
-                    getContext().startActivity(intent);
+                    startActivity(intent);
                     break;
             }
             return true;
@@ -133,6 +137,7 @@ public class HomeFragment extends Fragment {
                         mPostType = "surround";
                         break;
                 }
+                refreshPost();
             }
 
             @Override
@@ -143,6 +148,7 @@ public class HomeFragment extends Fragment {
     }
 
     private void refreshPost() {
+        if(mCheckTimeout != null && mCheckTimeout.isAlive()) return;
         mPostIdList.clear();
         mPostList.clear();
         //获取好友列表（待做）
@@ -272,6 +278,11 @@ public class HomeFragment extends Fragment {
                     public void onNext(MyResponse<PostPullResponse.APost> response) {
                         Log.i("sannmizu.blog", response.getResult());
                         mPostList.add(0, new PostObject(response.getData().getPost()));
+                        try {
+                            mRecyclerView.getAdapter().notifyDataSetChanged();
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
                     }
 
                     @Override
@@ -283,11 +294,6 @@ public class HomeFragment extends Fragment {
 
                     @Override
                     public void onComplete() {
-                        try {
-                            mRecyclerView.getAdapter().notifyDataSetChanged();
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
                         mSwipeRefreshLayout.setRefreshing(false);
                         ((PostAdapter)mRecyclerView.getAdapter()).setLoading(PostAdapter.LOADING_MORE);
                     }

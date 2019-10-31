@@ -320,13 +320,14 @@ public class LandingActivity extends AppCompatActivity implements View.OnClickLi
                             finish();
                         } else {
                             LandingActivity.logList.add("私密连接失败："+connectResponse.getReason());
+                            setResult(RESULT_CANCELED);
                         }
                     }
 
                     @Override
                     public void onError(Throwable e) {
                         LandingActivity.logList.add("登录失败："+e.getMessage());
-
+                        setResult(RESULT_CANCELED);
                     }
 
                     @Override

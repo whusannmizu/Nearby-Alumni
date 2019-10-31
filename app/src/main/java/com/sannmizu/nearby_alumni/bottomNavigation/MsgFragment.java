@@ -2,6 +2,7 @@ package com.sannmizu.nearby_alumni.bottomNavigation;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -24,6 +25,8 @@ import com.sannmizu.nearby_alumni.chat.NewMsgBean;
 import com.sannmizu.nearby_alumni.chat.StartObject;
 import com.sannmizu.nearby_alumni.chat.UserListAdapter;
 import com.sannmizu.nearby_alumni.database.Users;
+import com.sannmizu.nearby_alumni.denglu.LandingActivity;
+import com.sannmizu.nearby_alumni.utils.AccountUtils;
 
 import org.litepal.LitePal;
 
@@ -33,6 +36,7 @@ import java.util.List;
 import java.util.ListIterator;
 import java.util.Map;
 
+import static android.app.Activity.RESULT_OK;
 import static android.content.Context.MODE_PRIVATE;
 
 public class MsgFragment extends Fragment {
@@ -60,6 +64,11 @@ public class MsgFragment extends Fragment {
         mActivity = (Activity) context;
     }
 
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+    }
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -69,6 +78,15 @@ public class MsgFragment extends Fragment {
         setListener();
         initChat();
         return mView;
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        if(AccountUtils.getCurrentUserId() == 0) {
+            Intent intent = new Intent(getContext(), LandingActivity.class);
+            startActivityForResult(intent, 1);
+        }
     }
 
     @Override
@@ -144,4 +162,5 @@ public class MsgFragment extends Fragment {
         }
         mAdapter.notifyItemRangeChanged(position, mChatList.size() - position);
     }
+
 }

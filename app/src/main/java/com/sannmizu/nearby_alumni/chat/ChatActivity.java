@@ -92,9 +92,11 @@ public class ChatActivity extends AppCompatActivity {
         friend_name = intent.getStringExtra("name");
         startMsg = 0;
         if(friend_id == 0) {
+            Toast.makeText(this, "无效操作", Toast.LENGTH_SHORT).show();
             Log.i("sannmizu.chat", "intent缺少id");
             finish();
         } else if(friend_id == SharedPreUtils.getInt("currentUser", 0)) {
+            Toast.makeText(this, "无效操作", Toast.LENGTH_SHORT).show();
             Log.i("sannmizu.chat", "id==self");
             finish();
         }

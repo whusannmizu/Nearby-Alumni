@@ -39,6 +39,8 @@ import java.io.IOException;
 import okhttp3.Call;
 import okhttp3.Response;
 
+import static android.app.Activity.RESULT_OK;
+
 public class MineFragment extends Fragment implements MyOneLineView.OnArrowClickListener,MyOneLineView.OnRootClickListener{
  MyOneLineView oneitem,twoitem,threeitem,fouritem,soneitem;
  private SharedPreferences spref;
@@ -49,14 +51,14 @@ public class MineFragment extends Fragment implements MyOneLineView.OnArrowClick
  ImageView mbingmic;
  int imageSize, radius;
 
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.myactivity, container, false);
         //检查是否登陆
-        if(AccountUtils.getCurrentUserId() == 0) {
-            Intent intent = new Intent(getActivity(), LandingActivity.class);
-            getContext().startActivity(intent);
+        if(AccountUtils.getLocked()) {
+            AccountUtils.requestLogin(getContext());
         }
         spref= PreferenceManager.getDefaultSharedPreferences(getContext());
         mbeijing=view.findViewById(R.id.mbeijing);
@@ -167,6 +169,10 @@ public class MineFragment extends Fragment implements MyOneLineView.OnArrowClick
 
     @Override
     public void onArrowClick(View view) {
+        if(AccountUtils.getLocked()) {
+            AccountUtils.requestLogin(getContext());
+            return;
+        }
         switch ((int)view.getTag()){
             case 1:
                 startActivity(new Intent(getContext(), PersonalActivity.class));
@@ -180,6 +186,10 @@ public class MineFragment extends Fragment implements MyOneLineView.OnArrowClick
         }
     }
     public void onRootClick(View view){
+        if(AccountUtils.getLocked()) {
+            AccountUtils.requestLogin(getContext());
+            return;
+        }
         switch ((int)view.getTag()){
             case 11:
                 break;
@@ -188,6 +198,10 @@ public class MineFragment extends Fragment implements MyOneLineView.OnArrowClick
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        if(AccountUtils.getLocked()) {
+            AccountUtils.requestLogin(getContext());
+            return true;
+        }
         switch (item.getItemId()){
             case R.id.settings:
                 startActivity(new Intent(getContext(),shezhiActivity.class));
@@ -197,4 +211,5 @@ public class MineFragment extends Fragment implements MyOneLineView.OnArrowClick
         }
         return true;
     }
+
 }

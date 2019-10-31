@@ -89,7 +89,7 @@ public class PostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             ((PostHolder)holder).postText.setText(object.getPostText());
             //获取图片
             List<String> paths = object.getMediasPath();
-            if(paths != null) {
+            if(paths != null && ((PostHolder) holder).picsLayout.getChildCount() == 0) {
                 for (String eachPath : paths) {
                     ImageView imageView = new ImageView(((PostHolder) holder).picsLayout.getContext());
                     imageView.setImageResource(R.drawable.vector_drawable_defaultpicture);

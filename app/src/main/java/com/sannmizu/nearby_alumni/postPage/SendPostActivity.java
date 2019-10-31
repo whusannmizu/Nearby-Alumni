@@ -19,11 +19,13 @@ import android.os.Bundle;
 import android.provider.DocumentsContract;
 import android.provider.MediaStore;
 import android.util.Log;
+import android.view.View;
 import android.widget.CheckBox;
 import android.widget.GridLayout;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -46,6 +48,7 @@ public class SendPostActivity extends AppCompatActivity {
     private ImageButton choose_pic;
     private CheckBox share_box;
     private GridLayout pics_layout;
+    private ProgressBar progressBar;
 
     public static final int CHOOSE_PHOTO = 2;
 
@@ -67,6 +70,7 @@ public class SendPostActivity extends AppCompatActivity {
         choose_pic = findViewById(R.id.choose_picture);
         share_box = findViewById(R.id.check_nearby);
         pics_layout = findViewById(R.id.pics);
+        progressBar = findViewById(R.id.progress_bar);
     }
 
     private void setAttributes() {
@@ -79,7 +83,9 @@ public class SendPostActivity extends AppCompatActivity {
         });
         btn_send.setOnClickListener(v->{
             if(send_text.getText().length() != 0 || picsPath.size() != 0) {
-                send();
+                if(progressBar.getVisibility() != View.VISIBLE) {
+                    send();
+                }
             }
         });
         choose_pic.setOnClickListener(v->{
@@ -88,6 +94,7 @@ public class SendPostActivity extends AppCompatActivity {
     }
 
     private void send() {
+        progressBar.setVisibility(View.VISIBLE);
         PushBean pushBean = new PushBean();
 
         PushBean.PostBean postBean = new PushBean.PostBean();
@@ -118,6 +125,7 @@ public class SendPostActivity extends AppCompatActivity {
             @Override
             public void onSuccess() {
                 Log.i("sannmizu.sendpost", "success");
+                progressBar.setVisibility(View.GONE);
                 Toast.makeText(SendPostActivity.this, "成功发送", Toast.LENGTH_SHORT).show();
                 send_text.setText("");
                 picsPath.clear();
@@ -127,12 +135,14 @@ public class SendPostActivity extends AppCompatActivity {
             @Override
             public void onFailure(String reason) {
                 Log.i("sannmizu.sendpost", reason);
+                progressBar.setVisibility(View.GONE);
                 Toast.makeText(SendPostActivity.this, "发送失败", Toast.LENGTH_SHORT).show();
             }
 
             @Override
             public void onError(Throwable t) {
                 Log.e("sannmizu.sendpost", t.getMessage());
+                progressBar.setVisibility(View.GONE);
                 Toast.makeText(SendPostActivity.this, "发送失败", Toast.LENGTH_SHORT).show();
             }
         };

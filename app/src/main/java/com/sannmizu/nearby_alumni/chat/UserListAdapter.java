@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.sannmizu.nearby_alumni.R;
 import com.sannmizu.nearby_alumni.denglu.guanzhu;
+import com.sannmizu.nearby_alumni.utils.AccountUtils;
 
 import java.util.List;
 
@@ -69,6 +70,10 @@ public class UserListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                 ((StartHolder)holder).startText.setText(start.getText());
                 if(!holder.itemView.hasOnClickListeners()) {
                     holder.itemView.setOnClickListener(v -> {
+                        if(AccountUtils.getLocked()) {
+                            AccountUtils.requestLogin(v.getContext());
+                            return;
+                        }
                         Intent intent = new Intent(v.getContext(), start.getaClass());
                         v.getContext().startActivity(intent);
                     });
